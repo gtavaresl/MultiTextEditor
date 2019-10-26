@@ -21,11 +21,11 @@ public class ListUsers extends javax.swing.JFrame {
     public ListUsers(ArrayList<User> users) {
         initComponents();
         DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-        users.forEach((User u) -> {
+        for(int i = users.size()-1; i >= 0; i--){
             //            System.out.println(u.toString());
-            Object[] row = { u.getNome(), u.getLastLogin()};
+            Object[] row = { users.get(i).getNome(), users.get(i).getLastLogin()};
             model.addRow(row);
-        });
+        }
     }
 
     /**

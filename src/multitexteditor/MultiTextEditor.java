@@ -38,13 +38,14 @@ public class MultiTextEditor {
         File file = new File( "Usuarios.txt");
         if (file.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader("Usuarios.txt"))) {
-                String linha = reader.readLine(); // lê a primeira linha
-                while (linha != null) {
-//                    System.out.printf("%s\n", linha);
+                String linha1 = reader.readLine(); // lê a primeira linha
+                String linha2 = reader.readLine();
+                while (linha1 != null) {
                     User u;
-                    u = new User(linha,"1");
+                    u = new User(linha1,linha2);
                     users.add(u);
-                    linha = reader.readLine(); // lê da segunda até a última linha
+                    linha1 = reader.readLine(); // lê da terceira até a última linha
+                    linha2 = reader.readLine();
                 }
             }catch(IOException e){
                 System.out.println(e);

@@ -57,11 +57,14 @@ public class TelaLogin extends javax.swing.JFrame {
             File arquivo = new File("Usuarios.txt");
             FileWriter fw = new FileWriter(arquivo,true);
             try (BufferedWriter bw = new BufferedWriter(fw)) {
-                bw.write(logado.getNome() + ' ' + logado.getLastLogin());
+                if(users.size() > 1)
+                    bw.newLine();
+                bw.write(logado.getNome());
+                bw.newLine();
+                bw.write(logado.getLastLogin());
                 bw.flush();
                 bw.close();
                 fw.close();
-//                arquivo.close();
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
