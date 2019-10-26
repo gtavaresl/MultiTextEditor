@@ -5,22 +5,27 @@
  */
 package multitexteditor;
 
-//import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 /**
  *
  * @author Gabriell
  */
 public class User {
     private final String nome;
-    private final Calendar lastLogin;
-//    private SimpleDateFormat;
-    
-    public User(String nome, Calendar lastLogin){
+    private final String lastLogin;
+//Date data = fmt.parse("17/12/2007 19:30:20"); 
+//String str = fmt.format(data);
+
+    public User(String nome, String lastLogin){
         this.nome = nome;
         this.lastLogin = lastLogin;
-        
+    }
+    
+    public String getNome(){
+        return this.nome;
+    }
+    
+    public String getLastLogin(){
+        return this.lastLogin;
     }
     
     @Override

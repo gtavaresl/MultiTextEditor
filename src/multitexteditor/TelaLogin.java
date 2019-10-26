@@ -5,7 +5,11 @@
  */
 package multitexteditor;
 
-import java.util.Calendar;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -19,10 +23,12 @@ public class TelaLogin extends javax.swing.JFrame {
      */
     
     private User logado;
+    ArrayList<User> users;
             
-    public TelaLogin(User logado) {
+    public TelaLogin(ArrayList<User> users) {
         initComponents();
-        this.logado = logado;
+        this.users = users;
+        this.logado = null;
     }
     
     public User getLogado(){
@@ -30,12 +36,37 @@ public class TelaLogin extends javax.swing.JFrame {
     }
     
     public void login(){
-        Calendar data = Calendar.getInstance();
-        data.setTime(new Date(System.currentTimeMillis()));
-        this.logado = new User(jTextUser.getText(), data);
-        TelaTexto TT = new TelaTexto(logado);
-        this.dispose();
-        TT.setVisible(true);
+        String text = jTextUser.getText();
+        if(!text.isEmpty()){
+            Date data = new Date();
+//            SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy HH/MM/SS");
+//            formatador.format(data);
+            logado = new User(text,data.toString());
+            if(!users.contains(logado)){
+                updateUsers(logado);
+            }
+            TelaTexto TT = new TelaTexto(logado,users);
+            TT.setVisible(true);
+            this.dispose();
+        }
+    }
+    
+    public void updateUsers(User logado){
+        users.add(logado);
+        try {
+            File arquivo = new File("Usuarios.txt");
+            FileWriter fw = new FileWriter(arquivo,true);
+            try (BufferedWriter bw = new BufferedWriter(fw)) {
+                bw.write(logado.getNome() + ' ' + logado.getLastLogin());
+                bw.flush();
+                bw.close();
+                fw.close();
+//                arquivo.close();
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+               System.out.println(e);
+        }
     }
     
     /**
@@ -54,6 +85,7 @@ public class TelaLogin extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jTextUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -124,7 +156,7 @@ public class TelaLogin extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,6 +177,10 @@ public class TelaLogin extends javax.swing.JFrame {
 
     private void jButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonKeyPressed
         // TODO add your handling code here:
+        char key = evt.getKeyChar();
+        if(key == '\n'){
+            login();
+        }
     }//GEN-LAST:event_jButtonKeyPressed
 
     private void jTextUserKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextUserKeyPressed
