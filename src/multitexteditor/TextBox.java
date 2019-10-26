@@ -19,14 +19,14 @@ public class TextBox extends javax.swing.JFrame {
     
     private final boolean mode;
     Arquivo file;
-    JTextArea TL;
+    JTextArea TA;
     
-    public TextBox(JTextArea TL, Arquivo file, boolean mode) {
+    public TextBox(JTextArea TA, Arquivo file, boolean mode) {
         initComponents();
-        this.TL = TL;
+        this.TA = TA;
         this.file = file;
 //        modo true = criar novo
-//        modo false = abrir um novo
+//        modo false = abrir um arquivo
         this.mode = mode;
     }
 
@@ -39,7 +39,10 @@ public class TextBox extends javax.swing.JFrame {
     private void setFileName(){
         file.setNome(jTextField.getText());
         if(file.getNome() != null){
-            TL.setVisible(true);
+            file.setFile();
+            if(mode == false)
+                file.readFile();
+            TA.setVisible(true);
             this.dispose();
         }
     }
@@ -53,7 +56,7 @@ public class TextBox extends javax.swing.JFrame {
         jTextField = new javax.swing.JTextField();
         jButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {

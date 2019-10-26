@@ -10,8 +10,8 @@ package multitexteditor;
  * @author Gabriell
  */
 public class User {
-    private final String nome;
-    private final String lastLogin;
+    private String nome;
+    private String lastLogin;
 //Date data = fmt.parse("17/12/2007 19:30:20"); 
 //String str = fmt.format(data);
 
@@ -28,9 +28,17 @@ public class User {
         return this.lastLogin;
     }
     
+    public void setNome(String nome){
+        this.nome = nome;
+    }
+    
+    public void setLastLogin(String lastLogin){
+        this.lastLogin = lastLogin;
+    }
+    
     @Override
     public String toString(){
-        return this.nome;
+        return "Usuário: " + this.nome + "\n"+"Último login: " + this.lastLogin;
     }
     
 }

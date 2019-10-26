@@ -27,7 +27,7 @@ public class MultiTextEditor {
         TelaLogin TL;
         TL = new TelaLogin(users);
         TL.setVisible(true);
-        System.out.println(users.size());
+//        System.out.println(users.size());
         /*users.forEach((u) -> {
         System.out.println(u.toString());
         });*/

@@ -39,29 +39,37 @@ public class TelaLogin extends javax.swing.JFrame {
         String text = jTextUser.getText();
         if(!text.isEmpty()){
             Date data = new Date();
-//            SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy HH/MM/SS");
-//            formatador.format(data);
             logado = new User(text,data.toString());
-            if(!users.contains(logado)){
-                updateUsers(logado);
+            String LL = null;
+            int i;
+            for(i = 0; i < users.size(); i++){
+                if(users.get(i).getNome().equals(logado.getNome())){ // logado ja estava cadastrado
+                    LL = users.get(i).getLastLogin(); // pega o ultimo login
+                    users.set(i, logado); // atualiza o ultimo login
+                    break;
+                }
             }
-            TelaTexto TT = new TelaTexto(logado,users);
+            if(i == users.size()) // logado nao estava cadastrado
+                users.add(logado);
+            updateUsers(logado);
+            TelaTexto TT = new TelaTexto(logado,LL,users);
             TT.setVisible(true);
             this.dispose();
         }
     }
     
     public void updateUsers(User logado){
-        users.add(logado);
         try {
             File arquivo = new File("Usuarios.txt");
-            FileWriter fw = new FileWriter(arquivo,true);
+            FileWriter fw = new FileWriter(arquivo);
             try (BufferedWriter bw = new BufferedWriter(fw)) {
-                if(users.size() > 1)
+                for(int i = 0; i < users.size(); i++){
+                    if(i > 0)
+                        bw.newLine();
+                    bw.write(users.get(i).getNome());
                     bw.newLine();
-                bw.write(logado.getNome());
-                bw.newLine();
-                bw.write(logado.getLastLogin());
+                    bw.write(users.get(i).getLastLogin());
+                }
                 bw.flush();
                 bw.close();
                 fw.close();

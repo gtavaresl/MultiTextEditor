@@ -22,11 +22,11 @@ public class ListUsers extends javax.swing.JFrame {
         initComponents();
         DefaultTableModel model = (DefaultTableModel) jTable.getModel();
         for(int i = users.size()-1; i >= 0; i--){
-            //            System.out.println(u.toString());
             Object[] row = { users.get(i).getNome(), users.get(i).getLastLogin()};
             model.addRow(row);
         }
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -41,7 +41,7 @@ public class ListUsers extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         jTable.setBackground(new java.awt.Color(240, 240, 240));
