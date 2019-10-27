@@ -5,19 +5,19 @@
  */
 package multitexteditor;
 
-import java.io.BufferedWriter;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Gabriell
  */
-public class TelaUsers extends javax.swing.JFrame {
+public final class TelaUsers extends javax.swing.JFrame {
 
     /**
      * Creates new form ListUsers
@@ -25,58 +25,50 @@ public class TelaUsers extends javax.swing.JFrame {
      */
     
     User logado;
-    ArrayList<User> users;
     JLabel jLN;
-    private int indexLogado;
+    int tableIndex;
+    DefaultTableModel model;
             
-    public TelaUsers(ArrayList<User> users, User logado, JLabel jLN) {
+    public TelaUsers(User logado, JLabel jLN) {
         super("Editar/Visualizar usuários");
         initComponents();
         this.logado = logado;
-        this.users = users;
         this.jLN = jLN;
-        this.indexLogado = users.indexOf(logado);
-        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-        for(int i = users.size()-1; i >= 0; i--){
-            Object[] row = { users.get(i).getNome(), users.get(i).getLastLogin()};
-            model.addRow(row);
+        this.model = (DefaultTableModel) jTable.getModel();
+        createUsersTable(model);
+    }
+    
+    public void createUsersTable(DefaultTableModel model){
+        File file = new File( "Usuarios.txt");
+        if (file.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader("Usuarios.txt"))) {
+                String linha1 = reader.readLine(); // lê a primeira linha
+                String linha2 = reader.readLine();
+                while (linha1 != null) {
+                    Object[] row = { linha1, linha2 };
+                    model.addRow(row);
+                    linha1 = reader.readLine(); // lê da terceira até a última linha
+                    linha2 = reader.readLine();
+                }
+                tableIndex = logado.getIndex();
+            }catch(IOException e){
+                System.out.println(e);
+            }
         }
     }
     
     public void editUser() {
         if(!jTextField.getText().isEmpty()){
-            logado.setNome(jTextField.getText());
+            logado.editNome(jTextField.getText());
             jTextField.setText("");
-            DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-            model.removeRow(users.size() - 1 - indexLogado);
-            this.indexLogado = 0;
+            model.removeRow(logado.getIndex());
+            tableIndex = jTable.getRowCount();
             Object[] row = { logado.getNome(), logado.getLastLogin()};
             model.addRow(row);
-            updateUsers();
+//            MultiTextEditor.updateUsers();
             jLN.setText("Usuário: " + logado.getNome());
-        }
-    }
-
-    public void updateUsers(){
-        try {
-            File arquivo = new File("Usuarios.txt");
-            FileWriter fw = new FileWriter(arquivo);
-            try (BufferedWriter bw = new BufferedWriter(fw)) {
-                for(int i = 0; i < users.size(); i++){
-                    if(i > 0)
-                        bw.newLine();
-                    bw.write(users.get(i).getNome());
-                    bw.newLine();
-                    bw.write(users.get(i).getLastLogin());
-                }
-                bw.flush();
-                bw.close();
-                fw.close();
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-               System.out.println(e);
-        }
+        }else
+            JOptionPane.showMessageDialog(null, "Insira um nome");
     }
     
     /**
@@ -117,7 +109,6 @@ public class TelaUsers extends javax.swing.JFrame {
             }
         });
         jTable.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
-        jTable.setFocusable(false);
         jTable.setGridColor(new java.awt.Color(240, 240, 240));
         jTable.setSelectionForeground(new java.awt.Color(0, 0, 0));
         jTable.setShowHorizontalLines(false);

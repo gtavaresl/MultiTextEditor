@@ -5,11 +5,6 @@
  */
 package multitexteditor;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -24,64 +19,25 @@ public class TelaLogin extends javax.swing.JFrame {
      */
     
     private User logado;
-    ArrayList<User> users;
+    private String LL;
             
-    public TelaLogin(ArrayList<User> users) {
+    public TelaLogin() {
         super("Login");
         initComponents();
-        this.users = users;
         this.logado = null;
     }
-    
-    public User getLogado(){
-        return this.logado;
-    }
-    
+
     public void login(){
         String text = jTextUser.getText();
         if(!text.isEmpty()){
             Date data = new Date();
             logado = new User(text,data.toString());
-            String LL = null;
-            int i;
-            for(i = 0; i < users.size(); i++){
-                if(users.get(i).getNome().equals(logado.getNome())){ // logado ja estava cadastrado
-                    LL = users.get(i).getLastLogin(); // pega o ultimo login
-                    users.set(i, logado); // atualiza o ultimo login
-                    break;
-                }
-            }
-            if(i == users.size()) // logado nao estava cadastrado
-                users.add(logado);
-            updateUsers();
-            TelaTexto TT = new TelaTexto(logado,LL,users);
+            LL = logado.updateUsers();
+            TelaTexto TT = new TelaTexto(logado,LL);
             TT.setVisible(true);
             this.dispose();
-        }
-        else
+        }else
             JOptionPane.showMessageDialog(null, "Insira um usuário");
-    }
-    
-    public void updateUsers(){
-        try {
-            File arquivo = new File("Usuarios.txt");
-            FileWriter fw = new FileWriter(arquivo);
-            try (BufferedWriter bw = new BufferedWriter(fw)) {
-                for(int i = 0; i < users.size(); i++){
-                    if(i > 0)
-                        bw.newLine();
-                    bw.write(users.get(i).getNome());
-                    bw.newLine();
-                    bw.write(users.get(i).getLastLogin());
-                }
-                bw.flush();
-                bw.close();
-                fw.close();
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-               System.out.println(e);
-        }
     }
     
     /**

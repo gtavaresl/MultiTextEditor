@@ -5,6 +5,9 @@
  */
 package multitexteditor;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 /**
@@ -20,10 +23,16 @@ public class TextBox extends javax.swing.JFrame {
     private final boolean mode;
     Arquivo file;
     JTextArea TA;
+    JButton CB;
+    JButton S;
+    JLabel FN;
     
-    public TextBox(JTextArea TA, Arquivo file, boolean mode) {
+    public TextBox(JTextArea TA, JButton CB, JButton S, JLabel FN, Arquivo file, boolean mode) {
         initComponents();
         this.TA = TA;
+        this.CB = CB;
+        this.FN = FN;
+        this.S = S;
         this.file = file;
 //        modo true = criar novo
 //        modo false = abrir um arquivo
@@ -41,14 +50,23 @@ public class TextBox extends javax.swing.JFrame {
      */
     
     private void setFileName(){
-        file.setNome(jTextField.getText());
-        if(file.getNome() != null){
+        if(!jTextField.getText().isEmpty()){
+            file.setNome(null);
+            TA.setText("");
+            file.setNome(jTextField.getText());
             file.setFile();
-            if(mode == false)
+            if(mode){
+                file.setTexto("");
+            }else
                 file.readFile();
             TA.setVisible(true);
+            CB.setVisible(true);
+            S.setVisible(true);
+            FN.setText(file.getNome() + ".txt");
+            FN.setVisible(true);
             this.dispose();
-        }
+        }else
+            JOptionPane.showMessageDialog(null, "Insira um nome");
     }
     
     @SuppressWarnings("unchecked")
