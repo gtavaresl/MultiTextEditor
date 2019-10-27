@@ -37,6 +37,10 @@ public class TextBox extends javax.swing.JFrame {
 //        modo true = criar novo
 //        modo false = abrir um arquivo
         this.mode = mode;
+        if(this.mode)
+            this.setTitle("Criar arquivo");
+        else
+            this.setTitle("Abrir arquivo");
     }
 
     /**

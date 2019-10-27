@@ -5,7 +5,11 @@
  */
 package multitexteditor;
 
-import multitexteditor.MultiTextEditor;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+//import multitexteditor.MultiTextEditor;
 import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Gabriell
  */
-public class TelaUsers extends javax.swing.JFrame {
+public final class TelaUsers extends javax.swing.JFrame {
 
     /**
      * Creates new form ListUsers
@@ -28,6 +32,7 @@ public class TelaUsers extends javax.swing.JFrame {
     private int indexLogado;
             
     public TelaUsers(ArrayList<User> users, User logado, JLabel jLN) {
+        super("Editar/Visualizar usuários");
         initComponents();
         this.logado = logado;
         this.users = users;
@@ -35,9 +40,24 @@ public class TelaUsers extends javax.swing.JFrame {
         this.jLN = jLN;
         this.indexLogado = users.indexOf(logado);
         DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-        for(int i = users.size()-1; i >= 0; i--){
-            Object[] row = { users.get(i).getNome(), users.get(i).getLastLogin()};
-            model.addRow(row);
+        createUsersTable(model);
+    }
+    
+    public void createUsersTable(DefaultTableModel model){
+        File file = new File( "Usuarios.txt");
+        if (file.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader("Usuarios.txt"))) {
+                String linha1 = reader.readLine(); // lê a primeira linha
+                String linha2 = reader.readLine();
+                while (linha1 != null) {
+                    Object[] row = { linha1, linha2 };
+                    model.addRow(row);
+                    linha1 = reader.readLine(); // lê da terceira até a última linha
+                    linha2 = reader.readLine();
+                }
+            }catch(IOException e){
+                System.out.println(e);
+            }
         }
     }
     

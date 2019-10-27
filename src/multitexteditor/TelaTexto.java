@@ -26,6 +26,7 @@ public class TelaTexto extends javax.swing.JFrame {
     
     
     public TelaTexto(User logado, String LL, ArrayList<User> users) {
+        super("Editor de texto colaborativo");
         initComponents();
         this.logado = logado;
         this.users = users;
@@ -40,9 +41,10 @@ public class TelaTexto extends javax.swing.JFrame {
         jLabelFileName.setVisible(false);
         jButtonClose.setVisible(false);
         jButtonSave.setVisible(false);
+        jButtonSave.setMnemonic(KeyEvent.VK_S);
         jLabelFileSaved.setVisible(false);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -68,6 +70,7 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuItemAbrir = new javax.swing.JMenuItem();
         jMenuEdit = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuUsers = new javax.swing.JMenu();
         jMenuItemUsers = new javax.swing.JMenuItem();
 
@@ -158,6 +161,7 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuFile.setText("File");
 
         jMenuItemNovo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/new-file-icon-19-jpg.png"))); // NOI18N
         jMenuItemNovo.setText("Novo");
         jMenuItemNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -167,6 +171,7 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuFile.add(jMenuItemNovo);
 
         jMenuItemAbrir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemAbrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/open-icon-files-12-jpg.png"))); // NOI18N
         jMenuItemAbrir.setText("Abrir");
         jMenuItemAbrir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -179,14 +184,22 @@ public class TelaTexto extends javax.swing.JFrame {
 
         jMenuEdit.setText("Edit");
 
-        jMenuItem2.setText("jMenuItem2");
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/undo-icon.png"))); // NOI18N
+        jMenuItem2.setText("Desfazer");
         jMenuEdit.add(jMenuItem2);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/redo-icon.png"))); // NOI18N
+        jMenuItem1.setText("Refazer");
+        jMenuEdit.add(jMenuItem1);
 
         jMenuBar1.add(jMenuEdit);
 
         jMenuUsers.setText("Users");
 
         jMenuItemUsers.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemUsers.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/group-2-512.png"))); // NOI18N
         jMenuItemUsers.setText("Gerenciar");
         jMenuItemUsers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -310,6 +323,7 @@ public class TelaTexto extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuEdit;
     private javax.swing.JMenu jMenuFile;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItemAbrir;
     private javax.swing.JMenuItem jMenuItemNovo;

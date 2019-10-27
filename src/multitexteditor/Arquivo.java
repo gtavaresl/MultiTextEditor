@@ -73,11 +73,13 @@ public class Arquivo extends TimerTask{
     
     public void readFile(){
         try(BufferedReader br = new BufferedReader(new FileReader(this.arq))) {
-            String linha = br.readLine();
-            while(linha != null){
-                this.texto += linha + System.lineSeparator();
-                linha = br.readLine();
+            StringBuilder inputBuffer = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                inputBuffer.append(line);
+                inputBuffer.append('\n');
             }
+            this.texto = inputBuffer.toString();
             this.TA.setText(this.texto);
         } catch (IOException e){
             System.out.println(e);

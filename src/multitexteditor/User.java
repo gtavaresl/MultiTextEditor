@@ -12,8 +12,7 @@ package multitexteditor;
 public class User {
     private String nome;
     private String lastLogin;
-//Date data = fmt.parse("17/12/2007 19:30:20"); 
-//String str = fmt.format(data);
+
 
     public User(String nome, String lastLogin){
         this.nome = nome;
