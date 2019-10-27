@@ -116,6 +116,7 @@ public class TelaUsers extends javax.swing.JFrame {
             }
         });
         jTable.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        jTable.setFocusable(false);
         jTable.setGridColor(new java.awt.Color(240, 240, 240));
         jTable.setSelectionForeground(new java.awt.Color(0, 0, 0));
         jTable.setShowHorizontalLines(false);

@@ -71,7 +71,7 @@ public class Arquivo extends TimerTask{
         try(BufferedReader br = new BufferedReader(new FileReader(this.arq))) {
             String linha = br.readLine();
             while(linha != null){
-                this.texto += linha;
+                this.texto += linha + System.lineSeparator();
                 linha = br.readLine();
             }
             this.TA.setText(this.texto);
