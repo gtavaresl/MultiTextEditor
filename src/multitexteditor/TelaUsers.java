@@ -30,6 +30,7 @@ public class TelaUsers extends javax.swing.JFrame {
     private int indexLogado;
             
     public TelaUsers(ArrayList<User> users, User logado, JLabel jLN) {
+        super("Editar/Visualizar usuários");
         initComponents();
         this.logado = logado;
         this.users = users;

@@ -24,6 +24,7 @@ public class TelaTexto extends javax.swing.JFrame {
     
     
     public TelaTexto(User logado, String LL, ArrayList<User> users) {
+        super("Editor de texto colaborativo");
         initComponents();
         this.logado = logado;
         this.users = users;
@@ -46,6 +47,12 @@ public class TelaTexto extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuBar2 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuBar3 = new javax.swing.JMenuBar();
+        jMenu3 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea = new javax.swing.JTextArea();
@@ -58,8 +65,21 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuItemAbrir = new javax.swing.JMenuItem();
         jMenuEdit = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuUsers = new javax.swing.JMenu();
         jMenuItemUsers = new javax.swing.JMenuItem();
+
+        jMenu1.setText("File");
+        jMenuBar2.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar2.add(jMenu2);
+
+        jMenu3.setText("File");
+        jMenuBar3.add(jMenu3);
+
+        jMenu4.setText("Edit");
+        jMenuBar3.add(jMenu4);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -114,6 +134,7 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuFile.setText("File");
 
         jMenuItemNovo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/new-file-icon-19-jpg.png"))); // NOI18N
         jMenuItemNovo.setText("Novo");
         jMenuItemNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -123,6 +144,7 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuFile.add(jMenuItemNovo);
 
         jMenuItemAbrir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemAbrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/open-icon-files-12-jpg.png"))); // NOI18N
         jMenuItemAbrir.setText("Abrir");
         jMenuItemAbrir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,13 +157,26 @@ public class TelaTexto extends javax.swing.JFrame {
 
         jMenuEdit.setText("Edit");
 
-        jMenuItem2.setText("jMenuItem2");
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/undo-icon.png"))); // NOI18N
+        jMenuItem2.setText("Desfazer");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenuEdit.add(jMenuItem2);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/redo-icon.png"))); // NOI18N
+        jMenuItem1.setText("Refazer");
+        jMenuEdit.add(jMenuItem1);
 
         jMenuBar1.add(jMenuEdit);
 
         jMenuUsers.setText("Users");
 
+        jMenuItemUsers.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/group-2-512.png"))); // NOI18N
         jMenuItemUsers.setText("Editar / Visualizar");
         jMenuItemUsers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -197,6 +232,10 @@ public class TelaTexto extends javax.swing.JFrame {
         LU.setVisible(true);
     }//GEN-LAST:event_jMenuItemUsersActionPerformed
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -235,9 +274,16 @@ public class TelaTexto extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelLastLogin;
     private javax.swing.JLabel jLabelNome;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JMenuBar jMenuBar3;
     private javax.swing.JMenu jMenuEdit;
     private javax.swing.JMenu jMenuFile;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItemAbrir;
     private javax.swing.JMenuItem jMenuItemNovo;
