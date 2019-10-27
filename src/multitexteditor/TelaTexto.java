@@ -31,7 +31,7 @@ public class TelaTexto extends javax.swing.JFrame {
         file.setTimer();
         jLabelNome.setText("Usuário: " + logado.getNome());
         if(LL != null)
-            jLabelLastLogin.setText("Último login: " + LL);
+            jLabelLastLogin.setText("Último login havia sido: " + LL);
         else
             jLabelLastLogin.setText("Último login: " + logado.getLastLogin());
         jTextArea.setVisible(false);
@@ -53,13 +53,13 @@ public class TelaTexto extends javax.swing.JFrame {
         jLabelNome = new javax.swing.JLabel();
         jLabelLastLogin = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        jMenuFile = new javax.swing.JMenu();
         jMenuItemNovo = new javax.swing.JMenuItem();
         jMenuItemAbrir = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jMenuEdit = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuUsers = new javax.swing.JMenu();
-        jMenuItemListar = new javax.swing.JMenuItem();
+        jMenuItemUsers = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -111,7 +111,7 @@ public class TelaTexto extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jMenu1.setText("File");
+        jMenuFile.setText("File");
 
         jMenuItemNovo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemNovo.setText("Novo");
@@ -120,7 +120,7 @@ public class TelaTexto extends javax.swing.JFrame {
                 jMenuItemNovoActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItemNovo);
+        jMenuFile.add(jMenuItemNovo);
 
         jMenuItemAbrir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemAbrir.setText("Abrir");
@@ -129,26 +129,26 @@ public class TelaTexto extends javax.swing.JFrame {
                 jMenuItemAbrirActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItemAbrir);
+        jMenuFile.add(jMenuItemAbrir);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(jMenuFile);
 
-        jMenu2.setText("Edit");
+        jMenuEdit.setText("Edit");
 
         jMenuItem2.setText("jMenuItem2");
-        jMenu2.add(jMenuItem2);
+        jMenuEdit.add(jMenuItem2);
 
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(jMenuEdit);
 
         jMenuUsers.setText("Users");
 
-        jMenuItemListar.setText("Listar");
-        jMenuItemListar.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemUsers.setText("Editar / Visualizar");
+        jMenuItemUsers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemListarActionPerformed(evt);
+                jMenuItemUsersActionPerformed(evt);
             }
         });
-        jMenuUsers.add(jMenuItemListar);
+        jMenuUsers.add(jMenuItemUsers);
 
         jMenuBar1.add(jMenuUsers);
 
@@ -191,11 +191,11 @@ public class TelaTexto extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jMenuItemAbrirActionPerformed
 
-    private void jMenuItemListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemListarActionPerformed
+    private void jMenuItemUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUsersActionPerformed
         // TODO add your handling code here:
-        ListUsers LU = new ListUsers(users);
+        TelaUsers LU = new TelaUsers(users,logado,jLabelNome);
         LU.setVisible(true);
-    }//GEN-LAST:event_jMenuItemListarActionPerformed
+    }//GEN-LAST:event_jMenuItemUsersActionPerformed
 
     /**
      * @param args the command line arguments
@@ -235,13 +235,13 @@ public class TelaTexto extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelLastLogin;
     private javax.swing.JLabel jLabelNome;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu jMenuEdit;
+    private javax.swing.JMenu jMenuFile;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItemAbrir;
-    private javax.swing.JMenuItem jMenuItemListar;
     private javax.swing.JMenuItem jMenuItemNovo;
+    private javax.swing.JMenuItem jMenuItemUsers;
     private javax.swing.JMenu jMenuUsers;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

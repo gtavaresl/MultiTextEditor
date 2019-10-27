@@ -51,14 +51,14 @@ public class TelaLogin extends javax.swing.JFrame {
             }
             if(i == users.size()) // logado nao estava cadastrado
                 users.add(logado);
-            updateUsers(logado);
+            updateUsers();
             TelaTexto TT = new TelaTexto(logado,LL,users);
             TT.setVisible(true);
             this.dispose();
         }
     }
     
-    public void updateUsers(User logado){
+    public void updateUsers(){
         try {
             File arquivo = new File("Usuarios.txt");
             FileWriter fw = new FileWriter(arquivo);
