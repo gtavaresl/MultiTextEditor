@@ -5,6 +5,7 @@
  */
 package multitexteditor;
 
+import javax.swing.JButton;
 import javax.swing.JTextArea;
 
 /**
@@ -20,18 +21,18 @@ public class TextBox extends javax.swing.JFrame {
     private final boolean mode;
     Arquivo file;
     JTextArea TA;
+    JButton CB;
+    JButton S;
     
-    public TextBox(JTextArea TA, Arquivo file, boolean mode) {
+    public TextBox(JTextArea TA, JButton CB, JButton S, Arquivo file, boolean mode) {
         initComponents();
         this.TA = TA;
+        this.CB = CB;
+        this.S = S;
         this.file = file;
 //        modo true = criar novo
 //        modo false = abrir um arquivo
         this.mode = mode;
-        if(this.mode)
-            this.setTitle("Criar arquivo");
-        else
-            this.setTitle("Abrir arquivo");
     }
 
     /**
@@ -47,6 +48,8 @@ public class TextBox extends javax.swing.JFrame {
             if(mode == false)
                 file.readFile();
             TA.setVisible(true);
+            CB.setVisible(true);
+            S.setVisible(true);
             this.dispose();
         }
     }

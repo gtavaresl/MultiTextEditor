@@ -34,7 +34,6 @@ public class MultiTextEditor {
     }
     
     public static void loadUsers(ArrayList<User> users){
-//        System.out.printf("\nConteúdo do arquivo texto:\n");
         File file = new File( "Usuarios.txt");
         if (file.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader("Usuarios.txt"))) {
@@ -51,6 +50,5 @@ public class MultiTextEditor {
                 System.out.println(e);
             }
         }
-        System.out.println();
     }
 }

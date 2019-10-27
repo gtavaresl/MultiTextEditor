@@ -57,6 +57,10 @@ public class Arquivo extends TimerTask{
         this.arq = new File(this.nome + ".txt");
     }
     
+    public void nullFile(){
+        this.arq = null;
+    }
+    
     public void writeFile(){
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.arq))) {
             bw.write(this.texto);
