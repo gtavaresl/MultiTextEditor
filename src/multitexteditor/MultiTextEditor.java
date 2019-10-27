@@ -44,12 +44,11 @@ public class MultiTextEditor {
                     linha1 = reader.readLine(); // lê da terceira até a última linha
                     linha2 = reader.readLine();
                 }
-                return users;
             }catch(IOException e){
                 System.out.println(e);
             }
         }
-        return null;
+        return users;
     }
     
     public static void updateUsers(ArrayList<User> users){
