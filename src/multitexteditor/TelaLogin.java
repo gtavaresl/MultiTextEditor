@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -55,7 +56,8 @@ public class TelaLogin extends javax.swing.JFrame {
             TelaTexto TT = new TelaTexto(logado,LL,users);
             TT.setVisible(true);
             this.dispose();
-        }
+        }else
+            JOptionPane.showMessageDialog(null, "Insira um usuário");
     }
     
     public void updateUsers(){

@@ -6,6 +6,7 @@
 package multitexteditor;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 /**
@@ -42,8 +43,8 @@ public class TextBox extends javax.swing.JFrame {
      */
     
     private void setFileName(){
-        file.setNome(jTextField.getText());
-        if(file.getNome() != null){
+        if(!jTextField.getText().isEmpty()){
+            file.setNome(jTextField.getText());
             file.setFile();
             if(mode == false)
                 file.readFile();
@@ -51,7 +52,8 @@ public class TextBox extends javax.swing.JFrame {
             CB.setVisible(true);
             S.setVisible(true);
             this.dispose();
-        }
+        }else
+            JOptionPane.showMessageDialog(null, "Insira um nome");
     }
     
     @SuppressWarnings("unchecked")

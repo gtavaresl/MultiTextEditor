@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -53,7 +54,8 @@ public class TelaUsers extends javax.swing.JFrame {
             model.addRow(row);
             updateUsers();
             jLN.setText("Usuário: " + logado.getNome());
-        }
+        }else
+            JOptionPane.showMessageDialog(null, "Insira um nome");
     }
 
     public void updateUsers(){
