@@ -21,15 +21,13 @@ public class TelaTexto extends javax.swing.JFrame {
      */
     
     User logado;
-    ArrayList<User> users;
     Arquivo file;
     
     
-    public TelaTexto(User logado, String LL, ArrayList<User> users) {
+    public TelaTexto(User logado, String LL) {
         super("Editor de texto colaborativo");
         initComponents();
         this.logado = logado;
-        this.users = users;
         this.file = new Arquivo(jTextArea);
         file.setTimer();
         jLabelNome.setText("Usuário: " + logado.getNome());
@@ -250,7 +248,7 @@ public class TelaTexto extends javax.swing.JFrame {
 
     private void jMenuItemUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUsersActionPerformed
         // TODO add your handling code here:
-        TelaUsers LU = new TelaUsers(users,logado,jLabelNome);
+        TelaUsers LU = new TelaUsers(logado,jLabelNome);
         LU.setVisible(true);
     }//GEN-LAST:event_jMenuItemUsersActionPerformed
 

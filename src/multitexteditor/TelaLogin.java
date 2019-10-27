@@ -5,7 +5,6 @@
  */
 package multitexteditor;
 
-import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -20,12 +19,11 @@ public class TelaLogin extends javax.swing.JFrame {
      */
     
     private User logado;
-    ArrayList<User> users;
+    private String LL;
             
-    public TelaLogin(ArrayList<User> users) {
+    public TelaLogin() {
         super("Login");
         initComponents();
-        this.users = users;
         this.logado = null;
     }
 
@@ -34,19 +32,8 @@ public class TelaLogin extends javax.swing.JFrame {
         if(!text.isEmpty()){
             Date data = new Date();
             logado = new User(text,data.toString());
-            String LL = null;
-            int i;
-            for(i = 0; i < users.size(); i++){
-                if(users.get(i).getNome().equals(logado.getNome())){ // logado ja estava cadastrado
-                    LL = users.get(i).getLastLogin(); // pega o ultimo login
-                    users.set(i, logado); // atualiza o ultimo login
-                    break;
-                }
-            }
-            if(i == users.size()) // logado nao estava cadastrado
-                users.add(logado);
-            MultiTextEditor.updateUsers(users);
-            TelaTexto TT = new TelaTexto(logado,LL,users);
+            LL = logado.updateUsers();
+            TelaTexto TT = new TelaTexto(logado,LL);
             TT.setVisible(true);
             this.dispose();
         }else
