@@ -6,8 +6,8 @@
 package multitexteditor;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.*;
+import java.awt.event.*;
 
 /**
  *
@@ -37,6 +37,7 @@ public class TelaTexto extends javax.swing.JFrame {
         else
             jLabelLastLogin.setText("Último login: " + logado.getLastLogin());
         jTextArea.setVisible(false);
+        jLabelFileName.setVisible(false);
         jButtonClose.setVisible(false);
         jButtonSave.setVisible(false);
         jLabelFileSaved.setVisible(false);
@@ -57,6 +58,7 @@ public class TelaTexto extends javax.swing.JFrame {
         jButtonClose = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
         jLabelFileSaved = new javax.swing.JLabel();
+        jLabelFileName = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabelNome = new javax.swing.JLabel();
         jLabelLastLogin = new javax.swing.JLabel();
@@ -93,6 +95,8 @@ public class TelaTexto extends javax.swing.JFrame {
 
         jLabelFileSaved.setText("File saved!");
 
+        jLabelFileName.setText("jLabel1");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -101,8 +105,10 @@ public class TelaTexto extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabelFileSaved)
+                        .addComponent(jLabelFileName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabelFileSaved)
+                        .addGap(18, 18, 18)
                         .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonClose, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -116,7 +122,8 @@ public class TelaTexto extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabelFileSaved))
+                        .addComponent(jLabelFileSaved)
+                        .addComponent(jLabelFileName))
                     .addComponent(jButtonClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -179,7 +186,8 @@ public class TelaTexto extends javax.swing.JFrame {
 
         jMenuUsers.setText("Users");
 
-        jMenuItemUsers.setText("Editar");
+        jMenuItemUsers.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemUsers.setText("Gerenciar");
         jMenuItemUsers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemUsersActionPerformed(evt);
@@ -215,14 +223,14 @@ public class TelaTexto extends javax.swing.JFrame {
     private void jMenuItemNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNovoActionPerformed
         // TODO add your handling code here:
         TextBox TB;
-        TB = new TextBox(this.jTextArea, this.jButtonClose, this.jButtonSave, this.file, true);
+        TB = new TextBox(this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.file, true);
         TB.setVisible(true);
         
     }//GEN-LAST:event_jMenuItemNovoActionPerformed
 
     private void jMenuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAbrirActionPerformed
         // TODO add your handling code here:
-        TextBox TB = new TextBox(this.jTextArea, this.jButtonClose, this.jButtonSave, this.file, false);
+        TextBox TB = new TextBox(this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.file, false);
         TB.setVisible(true);
         
     }//GEN-LAST:event_jMenuItemAbrirActionPerformed
@@ -235,7 +243,6 @@ public class TelaTexto extends javax.swing.JFrame {
 
     private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
         // TODO add your handling code here:
-        file.writeFile();
         file.setNome(null);
         file.setTexto("");
         file.nullFile();
@@ -243,11 +250,18 @@ public class TelaTexto extends javax.swing.JFrame {
         jButtonClose.setVisible(false);
         jButtonSave.setVisible(false);
         jLabelFileSaved.setVisible(false);
+        jLabelFileName.setVisible(false);
     }//GEN-LAST:event_jButtonCloseActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
         // TODO add your handling code here:
         file.writeFile();
+//        aparecer mensagem de "file saved" por 5 segundos
+        Timer timer = new Timer(5000, (ActionEvent evt1) -> {
+            jLabelFileSaved.setVisible(false);
+        });
+        timer.setRepeats(false);
+        timer.start();
         jLabelFileSaved.setVisible(true);
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
@@ -289,6 +303,7 @@ public class TelaTexto extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonClose;
     private javax.swing.JButton jButtonSave;
+    private javax.swing.JLabel jLabelFileName;
     private javax.swing.JLabel jLabelFileSaved;
     private javax.swing.JLabel jLabelLastLogin;
     private javax.swing.JLabel jLabelNome;

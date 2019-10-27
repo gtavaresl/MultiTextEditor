@@ -6,8 +6,10 @@
 package multitexteditor;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -22,19 +24,15 @@ public class MultiTextEditor {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        ArrayList<User> users = new ArrayList<>();
-        loadUsers(users);
+        ArrayList<User> users = loadUsers();
         TelaLogin TL;
         TL = new TelaLogin(users);
         TL.setVisible(true);
-//        System.out.println(users.size());
-        /*users.forEach((u) -> {
-        System.out.println(u.toString());
-        });*/
     }
     
-    public static void loadUsers(ArrayList<User> users){
+    public static ArrayList<User> loadUsers(){
         File file = new File( "Usuarios.txt");
+        ArrayList<User> users  = new ArrayList<>();
         if (file.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader("Usuarios.txt"))) {
                 String linha1 = reader.readLine(); // lê a primeira linha
@@ -46,9 +44,33 @@ public class MultiTextEditor {
                     linha1 = reader.readLine(); // lê da terceira até a última linha
                     linha2 = reader.readLine();
                 }
+                return users;
             }catch(IOException e){
                 System.out.println(e);
             }
+        }
+        return null;
+    }
+    
+    public static void updateUsers(ArrayList<User> users){
+        try {
+            File arquivo = new File("Usuarios.txt");
+            FileWriter fw = new FileWriter(arquivo);
+            try (BufferedWriter bw = new BufferedWriter(fw)) {
+                for(int i = 0; i < users.size(); i++){
+                    if(i > 0)
+                        bw.newLine();
+                    bw.write(users.get(i).getNome());
+                    bw.newLine();
+                    bw.write(users.get(i).getLastLogin());
+                }
+                bw.flush();
+                bw.close();
+                fw.close();
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+               System.out.println(e);
         }
     }
 }

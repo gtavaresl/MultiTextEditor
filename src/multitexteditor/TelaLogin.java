@@ -5,10 +5,7 @@
  */
 package multitexteditor;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import multitexteditor.MultiTextEditor;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
@@ -31,11 +28,7 @@ public class TelaLogin extends javax.swing.JFrame {
         this.users = users;
         this.logado = null;
     }
-    
-    public User getLogado(){
-        return this.logado;
-    }
-    
+
     public void login(){
         String text = jTextUser.getText();
         if(!text.isEmpty()){
@@ -52,34 +45,12 @@ public class TelaLogin extends javax.swing.JFrame {
             }
             if(i == users.size()) // logado nao estava cadastrado
                 users.add(logado);
-            updateUsers();
+            MultiTextEditor.updateUsers(users);
             TelaTexto TT = new TelaTexto(logado,LL,users);
             TT.setVisible(true);
             this.dispose();
         }else
             JOptionPane.showMessageDialog(null, "Insira um usuário");
-    }
-    
-    public void updateUsers(){
-        try {
-            File arquivo = new File("Usuarios.txt");
-            FileWriter fw = new FileWriter(arquivo);
-            try (BufferedWriter bw = new BufferedWriter(fw)) {
-                for(int i = 0; i < users.size(); i++){
-                    if(i > 0)
-                        bw.newLine();
-                    bw.write(users.get(i).getNome());
-                    bw.newLine();
-                    bw.write(users.get(i).getLastLogin());
-                }
-                bw.flush();
-                bw.close();
-                fw.close();
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-               System.out.println(e);
-        }
     }
     
     /**

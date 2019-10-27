@@ -5,10 +5,7 @@
  */
 package multitexteditor;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import multitexteditor.MultiTextEditor;
 import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,6 +31,7 @@ public class TelaUsers extends javax.swing.JFrame {
         initComponents();
         this.logado = logado;
         this.users = users;
+        this.users = MultiTextEditor.loadUsers();
         this.jLN = jLN;
         this.indexLogado = users.indexOf(logado);
         DefaultTableModel model = (DefaultTableModel) jTable.getModel();
@@ -52,32 +50,10 @@ public class TelaUsers extends javax.swing.JFrame {
             this.indexLogado = 0;
             Object[] row = { logado.getNome(), logado.getLastLogin()};
             model.addRow(row);
-            updateUsers();
+            MultiTextEditor.updateUsers(users);
             jLN.setText("Usuário: " + logado.getNome());
         }else
             JOptionPane.showMessageDialog(null, "Insira um nome");
-    }
-
-    public void updateUsers(){
-        try {
-            File arquivo = new File("Usuarios.txt");
-            FileWriter fw = new FileWriter(arquivo);
-            try (BufferedWriter bw = new BufferedWriter(fw)) {
-                for(int i = 0; i < users.size(); i++){
-                    if(i > 0)
-                        bw.newLine();
-                    bw.write(users.get(i).getNome());
-                    bw.newLine();
-                    bw.write(users.get(i).getLastLogin());
-                }
-                bw.flush();
-                bw.close();
-                fw.close();
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-               System.out.println(e);
-        }
     }
     
     /**
