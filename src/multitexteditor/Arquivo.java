@@ -5,6 +5,7 @@
  */
 package multitexteditor;
 
+//import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -50,7 +51,7 @@ public class Arquivo extends TimerTask{
     }
     
     public void setTimer(){
-        timer.scheduleAtFixedRate(this,0,100);
+        timer.scheduleAtFixedRate(this,0,200);
     }
     
     public void setFile(){
@@ -90,8 +91,12 @@ public class Arquivo extends TimerTask{
     public void run() {
         if(this.nome != null){
             this.texto = TA.getText();
-//            System.out.println(this.texto);
             this.writeFile();
+//            javax.swing.Timer rf = new javax.swing.Timer(100, (ActionEvent evt1) -> {
+//                this.readFile();
+//            });
+//            rf.setRepeats(false);
+//            rf.start();
         }
     }
     

@@ -5,9 +5,10 @@
  */
 package multitexteditor;
 
-import java.util.ArrayList;
+import java.awt.Container;
 import javax.swing.*;
 import java.awt.event.*;
+import javax.swing.undo.UndoManager;
 
 /**
  *
@@ -22,13 +23,14 @@ public class TelaTexto extends javax.swing.JFrame {
     
     User logado;
     Arquivo file;
-    
+    UndoManager manager = new UndoManager();
     
     public TelaTexto(User logado, String LL) {
         super("Editor de texto colaborativo");
         initComponents();
         this.logado = logado;
         this.file = new Arquivo(jTextArea);
+        jTextArea.getDocument().addUndoableEditListener(manager);        
         file.setTimer();
         jLabelNome.setText("Usuário: " + logado.getNome());
         if(LL != null)
@@ -41,6 +43,7 @@ public class TelaTexto extends javax.swing.JFrame {
         jButtonSave.setVisible(false);
         jButtonSave.setMnemonic(KeyEvent.VK_S);
         jLabelFileSaved.setVisible(false);
+        
     }
     
     /**
@@ -67,8 +70,9 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuItemNovo = new javax.swing.JMenuItem();
         jMenuItemAbrir = new javax.swing.JMenuItem();
         jMenuEdit = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItemUndo = new javax.swing.JMenuItem();
+        jMenuItemRedo = new javax.swing.JMenuItem();
+        jMenuItemRemoveChar = new javax.swing.JMenuItem();
         jMenuUsers = new javax.swing.JMenu();
         jMenuItemUsers = new javax.swing.JMenuItem();
 
@@ -182,15 +186,34 @@ public class TelaTexto extends javax.swing.JFrame {
 
         jMenuEdit.setText("Edit");
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/undo-icon.png"))); // NOI18N
-        jMenuItem2.setText("Desfazer");
-        jMenuEdit.add(jMenuItem2);
+        jMenuItemUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/undo-icon.png"))); // NOI18N
+        jMenuItemUndo.setText("Desfazer");
+        jMenuItemUndo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemUndoActionPerformed(evt);
+            }
+        });
+        jMenuEdit.add(jMenuItemUndo);
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/redo-icon.png"))); // NOI18N
-        jMenuItem1.setText("Refazer");
-        jMenuEdit.add(jMenuItem1);
+        jMenuItemRedo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemRedo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/redo-icon.png"))); // NOI18N
+        jMenuItemRedo.setText("Refazer");
+        jMenuItemRedo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemRedoActionPerformed(evt);
+            }
+        });
+        jMenuEdit.add(jMenuItemRedo);
+
+        jMenuItemRemoveChar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/abc.png"))); // NOI18N
+        jMenuItemRemoveChar.setText("Remover caracteres");
+        jMenuItemRemoveChar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemRemoveCharActionPerformed(evt);
+            }
+        });
+        jMenuEdit.add(jMenuItemRemoveChar);
 
         jMenuBar1.add(jMenuEdit);
 
@@ -233,17 +256,18 @@ public class TelaTexto extends javax.swing.JFrame {
 
     private void jMenuItemNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNovoActionPerformed
         // TODO add your handling code here:
+        manager.discardAllEdits(); //descarta todos as edições da textArea
         TextBox TB;
         TB = new TextBox(this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.file, true);
         TB.setVisible(true);
-        
     }//GEN-LAST:event_jMenuItemNovoActionPerformed
 
     private void jMenuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAbrirActionPerformed
         // TODO add your handling code here:
+//        jTextArea.setText(""); //limpa o texto da textArea
+        manager.discardAllEdits(); //descarta todos as edições da textArea
         TextBox TB = new TextBox(this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.file, false);
         TB.setVisible(true);
-        
     }//GEN-LAST:event_jMenuItemAbrirActionPerformed
 
     private void jMenuItemUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUsersActionPerformed
@@ -254,6 +278,8 @@ public class TelaTexto extends javax.swing.JFrame {
 
     private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
         // TODO add your handling code here:
+        jTextArea.setText(""); //limpa o texto da textArea
+        manager.discardAllEdits(); //descarta todos as edições da textArea
         file.setNome(null);
         file.setTexto("");
         file.nullFile();
@@ -276,6 +302,24 @@ public class TelaTexto extends javax.swing.JFrame {
         jLabelFileSaved.setVisible(true);
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
+    private void jMenuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUndoActionPerformed
+        // TODO add your handling code here:
+        UndoAction undo = new UndoAction(manager, "Undo");
+        undo.actionPerformed(evt);
+    }//GEN-LAST:event_jMenuItemUndoActionPerformed
+
+    private void jMenuItemRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRedoActionPerformed
+        // TODO add your handling code here:
+        RedoAction redo = new RedoAction(manager, "Redo");
+        redo.actionPerformed(evt);
+    }//GEN-LAST:event_jMenuItemRedoActionPerformed
+
+    private void jMenuItemRemoveCharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRemoveCharActionPerformed
+        // TODO add your handling code here:
+        RemoveChar RC = new RemoveChar();
+        RC.setVisible(true);
+    }//GEN-LAST:event_jMenuItemRemoveCharActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -321,10 +365,11 @@ public class TelaTexto extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuEdit;
     private javax.swing.JMenu jMenuFile;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItemAbrir;
     private javax.swing.JMenuItem jMenuItemNovo;
+    private javax.swing.JMenuItem jMenuItemRedo;
+    private javax.swing.JMenuItem jMenuItemRemoveChar;
+    private javax.swing.JMenuItem jMenuItemUndo;
     private javax.swing.JMenuItem jMenuItemUsers;
     private javax.swing.JMenu jMenuUsers;
     private javax.swing.JPanel jPanel1;

@@ -61,11 +61,7 @@ public final class TelaUsers extends javax.swing.JFrame {
         if(!jTextField.getText().isEmpty()){
             logado.editNome(jTextField.getText());
             jTextField.setText("");
-            model.removeRow(logado.getIndex());
-            tableIndex = jTable.getRowCount();
-            Object[] row = { logado.getNome(), logado.getLastLogin()};
-            model.addRow(row);
-//            MultiTextEditor.updateUsers();
+            model.setValueAt(logado.getNome(), logado.getIndex(), 0);
             jLN.setText("Usuário: " + logado.getNome());
         }else
             JOptionPane.showMessageDialog(null, "Insira um nome");
