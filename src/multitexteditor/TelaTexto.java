@@ -5,7 +5,6 @@
  */
 package multitexteditor;
 
-import java.awt.Container;
 import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.undo.UndoManager;
@@ -43,7 +42,8 @@ public class TelaTexto extends javax.swing.JFrame {
         jButtonSave.setVisible(false);
         jButtonSave.setMnemonic(KeyEvent.VK_S);
         jLabelFileSaved.setVisible(false);
-        
+        jMenuItemRedo.setEnabled(false);
+        jMenuItemUndo.setEnabled(false);
     }
     
     /**
@@ -258,15 +258,14 @@ public class TelaTexto extends javax.swing.JFrame {
         // TODO add your handling code here:
         manager.discardAllEdits(); //descarta todos as edições da textArea
         TextBox TB;
-        TB = new TextBox(this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.file, true);
+        TB = new TextBox(this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.file, "Criar arquivo");
         TB.setVisible(true);
     }//GEN-LAST:event_jMenuItemNovoActionPerformed
 
     private void jMenuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAbrirActionPerformed
         // TODO add your handling code here:
-//        jTextArea.setText(""); //limpa o texto da textArea
         manager.discardAllEdits(); //descarta todos as edições da textArea
-        TextBox TB = new TextBox(this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.file, false);
+        TextBox TB = new TextBox(this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.file, "Abrir arquivo");
         TB.setVisible(true);
     }//GEN-LAST:event_jMenuItemAbrirActionPerformed
 
@@ -288,6 +287,10 @@ public class TelaTexto extends javax.swing.JFrame {
         jButtonSave.setVisible(false);
         jLabelFileSaved.setVisible(false);
         jLabelFileName.setVisible(false);
+        jMenuItemAbrir.setEnabled(true);
+        jMenuItemNovo.setEnabled(true);
+        jMenuItemUndo.setEnabled(false);
+        jMenuItemRedo.setEnabled(false);
     }//GEN-LAST:event_jButtonCloseActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed

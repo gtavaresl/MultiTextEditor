@@ -7,6 +7,7 @@ package multitexteditor;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
@@ -20,27 +21,33 @@ public class TextBox extends javax.swing.JFrame {
      * Creates new form TextBox
      */
     
-    private final boolean mode;
+    private final String mode;
     Arquivo file;
     JTextArea TA;
     JButton CB;
     JButton S;
     JLabel FN;
+    JMenuItem N;
+    JMenuItem O;
+    JMenuItem U;
+    JMenuItem R;
     
-    public TextBox(JTextArea TA, JButton CB, JButton S, JLabel FN, Arquivo file, boolean mode) {
+    
+    public TextBox(JTextArea TA, JButton CB, JButton S, JLabel FN, JMenuItem N, JMenuItem O,JMenuItem U, JMenuItem R, Arquivo file, String mode) {
+        super(mode);
+        this.mode = mode;
         initComponents();
         this.TA = TA;
         this.CB = CB;
         this.FN = FN;
         this.S = S;
+        this.N = N;
+        this.O = O;
+        this.U = U;
+        this.R = R;
         this.file = file;
 //        modo true = criar novo
 //        modo false = abrir um arquivo
-        this.mode = mode;
-        if(this.mode)
-            this.setTitle("Criar arquivo");
-        else
-            this.setTitle("Abrir arquivo");
     }
 
     /**
@@ -55,15 +62,19 @@ public class TextBox extends javax.swing.JFrame {
             TA.setText("");
             file.setNome(jTextField.getText());
             file.setFile();
-            if(mode){
+            if(mode.equals("Criar arquivo")){
                 file.setTexto("");
-            }else
+            }else if(mode.equals("Abrir arquivo"))
                 file.readFile();
             TA.setVisible(true);
             CB.setVisible(true);
             S.setVisible(true);
             FN.setText(file.getNome() + ".txt");
             FN.setVisible(true);
+            N.setEnabled(false);
+            O.setEnabled(false);
+            R.setEnabled(true);
+            U.setEnabled(true);
             this.dispose();
         }else
             JOptionPane.showMessageDialog(null, "Insira um nome");
