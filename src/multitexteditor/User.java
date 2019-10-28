@@ -109,17 +109,24 @@ public class User {
         try (BufferedReader br = new BufferedReader(new FileReader("Usuarios.txt"))) {
             String line1;
             String line2;
-            while ((line1 = br.readLine()) != null) {
-                if(line1.equals(this.nome)){
-                    this.nome = newNome;
-                    line1 = this.nome;
-                }
+            for(int i = 0; i < this.index; i++){
+                line1 = br.readLine();
                 inputBuffer.append(line1);
                 inputBuffer.append('\n');
                 line2 = br.readLine();
                 inputBuffer.append(line2);
                 inputBuffer.append('\n');
             }
+            line1 = br.readLine();
+            if(line1.equals(this.nome)){
+                this.nome = newNome;
+                line1 = this.nome;
+            }
+            inputBuffer.append(line1);
+            inputBuffer.append('\n');
+            line2 = br.readLine();
+            inputBuffer.append(line2);
+            inputBuffer.append('\n');
             br.close();
         } catch(IOException e) {
             System.out.println(e);
