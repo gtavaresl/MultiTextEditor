@@ -5,7 +5,7 @@
  */
 package multitexteditor;
 
-//import java.awt.event.ActionEvent;
+import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,12 +25,14 @@ public class Arquivo extends TimerTask{
     private String texto;
     private final Timer timer;
     private File arq;
-    public JTextArea TA;
+    public JTextArea textArea;
+    private boolean editable;
     
-    public Arquivo(JTextArea TA){
+    public Arquivo(JTextArea textArea){
         this.texto = "";
         this.timer = new Timer();
-        this.TA = TA;
+        this.textArea = textArea;
+        this.editable = true;
     }
 
     public String getNome() {
@@ -40,6 +42,15 @@ public class Arquivo extends TimerTask{
     
     public String getTexto() {
         return texto;
+    }
+
+
+    public boolean isEditable() {
+        return editable;
+    }
+    
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
     
     public void setNome(String nome) {
@@ -51,7 +62,7 @@ public class Arquivo extends TimerTask{
     }
     
     public void setTimer(){
-        timer.scheduleAtFixedRate(this,0,200);
+        timer.scheduleAtFixedRate(this,0,1000);
     }
     
     public void setFile(){
@@ -66,38 +77,60 @@ public class Arquivo extends TimerTask{
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.arq))) {
             bw.write(this.texto);
             bw.flush();
+            bw.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-               System.out.println(e);
+            System.out.println(e);
         }
     }
     
     public void readFile(){
-        try(BufferedReader br = new BufferedReader(new FileReader(this.arq))) {
-            StringBuilder inputBuffer = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                inputBuffer.append(line);
-                inputBuffer.append('\n');
+        if(this.arq != null){
+            try(BufferedReader br = new BufferedReader(new FileReader(this.arq))) {
+                StringBuilder inputBuffer = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    inputBuffer.append(line);
+                    inputBuffer.append('\n');
+                }
+                this.texto = inputBuffer.toString();
+                this.textArea.setText(this.texto);
+                br.close();
+            } catch (IOException e){
+                System.out.println(e);
             }
-            this.texto = inputBuffer.toString();
-            this.TA.setText(this.texto);
-        } catch (IOException e){
-            System.out.println(e);
         }
     }
 
     @Override
     public void run() {
-        if(this.nome != null){
-            this.texto = TA.getText();
+        if(this.arq != null){
+            this.texto = textArea.getText();
             this.writeFile();
-//            javax.swing.Timer rf = new javax.swing.Timer(100, (ActionEvent evt1) -> {
-//                this.readFile();
+//            javax.swing.Timer rf = new javax.swing.Timer(500, (ActionEvent evt1) -> {
+//                if(this.editable){
+//                    int cursor = this.textArea.getCaretPosition();
+//                    this.readFile();
+//                    if(cursor >= this.textArea.getDocument().getLength())
+//                        cursor = this.textArea.getDocument().getLength()-1;
+//                    this.textArea.setCaretPosition(cursor);
+//                }
 //            });
 //            rf.setRepeats(false);
 //            rf.start();
         }
     }
+
+//    @Override
+//    public void run() {
+//        if(this.arq != null && this.editable){
+//            int cursor = this.textArea.getCaretPosition();
+//            this.readFile();
+//            if(cursor >= this.textArea.getDocument().getLength())
+//                cursor = this.textArea.getDocument().getLength()-1;
+//            this.textArea.setCaretPosition(cursor);
+//        }
+//    }
+
     
 }

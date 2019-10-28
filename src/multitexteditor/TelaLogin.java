@@ -5,6 +5,7 @@
  */
 package multitexteditor;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -20,18 +21,20 @@ public class TelaLogin extends javax.swing.JFrame {
     
     private User logado;
     private String LL;
-            
+    private final SimpleDateFormat fmt;        
+    
     public TelaLogin() {
         super("Login");
         initComponents();
         this.logado = null;
+        this.fmt = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     }
 
     public void login(){
         String text = jTextUser.getText();
         if(!text.isEmpty()){
             Date data = new Date();
-            logado = new User(text,data.toString());
+            logado = new User(text,fmt.format(data));
             LL = logado.updateUsers();
             TelaTexto TT = new TelaTexto(logado,LL);
             TT.setVisible(true);
