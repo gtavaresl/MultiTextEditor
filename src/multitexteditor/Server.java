@@ -5,6 +5,7 @@
  */
 package multitexteditor;
 
+import java.awt.Frame;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,8 +62,25 @@ public class Server {
     
     public void disconnectClient(User client){
         this.clients.remove(client);
-//        this.listClients();
         this.updateJList();
+        Frame[] frames = Frame.getFrames();
+        for (Frame frame : frames) {
+            if (frame.getName().contains("-"+client.getNome()) == true && frame.getName().equals("frameServidor") == false) {
+                frame.dispose();
+            }
+        }
+    }
+    
+    public void disconnectAll(){
+        this.clients.removeAll(clients);
+        this.updateJList();
+        Frame[] frames = Frame.getFrames();
+        for (Frame frame : frames) {
+            if (frame.getName().equals("frameServidor")) {
+                continue;
+            }
+            frame.dispose();
+        }
     }
     
     public void updateJList(){
