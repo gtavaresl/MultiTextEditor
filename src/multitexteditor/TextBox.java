@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import javax.swing.undo.UndoManager;
 
 /**
  *
@@ -31,13 +32,16 @@ public class TextBox extends javax.swing.JFrame {
     JMenuItem O;
     JMenuItem U;
     JMenuItem R;
+    UndoManager manager;
     
     
-    public TextBox(JTextArea TA, JButton CB, JButton S, JLabel FN, JMenuItem N, JMenuItem O,JMenuItem U, JMenuItem R, Arquivo file, String mode) {
+    public TextBox(UndoManager manager, JTextArea TA, JButton CB, JButton S, JLabel FN, JMenuItem N, JMenuItem O,JMenuItem U, JMenuItem R, Arquivo file, String mode) {
         super(mode);
         this.mode = mode;
         initComponents();
+        this.manager = manager;
         this.TA = TA;
+        this.setLocationRelativeTo(null);
         this.CB = CB;
         this.FN = FN;
         this.S = S;
@@ -66,7 +70,9 @@ public class TextBox extends javax.swing.JFrame {
                 file.setTexto("");
             }else if(mode.equals("Abrir arquivo"))
                 file.readFile();
+            manager.discardAllEdits();
             TA.setVisible(true);
+            TA.requestFocus();
             CB.setVisible(true);
             S.setVisible(true);
             FN.setText(file.getNome() + ".txt");

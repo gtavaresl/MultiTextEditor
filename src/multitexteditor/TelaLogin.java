@@ -5,6 +5,7 @@
  */
 package multitexteditor;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -20,18 +21,21 @@ public class TelaLogin extends javax.swing.JFrame {
     
     private User logado;
     private String LL;
-            
+    private final SimpleDateFormat fmt;        
+    
     public TelaLogin() {
         super("Login");
         initComponents();
+        this.setLocationRelativeTo(null);
         this.logado = null;
+        this.fmt = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     }
 
     public void login(){
         String text = jTextUser.getText();
         if(!text.isEmpty()){
             Date data = new Date();
-            logado = new User(text,data.toString());
+            logado = new User(text,fmt.format(data));
             LL = logado.updateUsers();
             TelaTexto TT = new TelaTexto(logado,LL);
             TT.setVisible(true);
@@ -81,9 +85,9 @@ public class TelaLogin extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("USER:");
+        jLabel1.setText("User:");
 
-        jButton1.setText("Sair");
+        jButton1.setText("Exit");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -96,9 +100,9 @@ public class TelaLogin extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextUser))
                     .addGroup(jPanel1Layout.createSequentialGroup()

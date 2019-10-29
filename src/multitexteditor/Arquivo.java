@@ -5,32 +5,37 @@
  */
 package multitexteditor;
 
-import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JTextArea;
 
 /**
  *
  * @author Gabriell
  */
-public class Arquivo extends TimerTask{
+public class Arquivo { //extends TimerTask{
     private String nome;
     private String texto;
-    private final Timer timer;
+//    private final Timer timer;
     private File arq;
-    public JTextArea TA;
+    public JTextArea textArea;
+    private final Lock semaforo;
+    private final Condition cond;
+
     
-    public Arquivo(JTextArea TA){
+    public Arquivo(JTextArea textArea){
         this.texto = "";
-        this.timer = new Timer();
-        this.TA = TA;
+//        this.timer = new Timer();
+        this.textArea = textArea;
+        semaforo = new ReentrantLock();
+        cond = semaforo.newCondition();
     }
 
     public String getNome() {
@@ -50,9 +55,9 @@ public class Arquivo extends TimerTask{
         this.texto = texto;
     }
     
-    public void setTimer(){
-        timer.scheduleAtFixedRate(this,0,1000);
-    }
+//    public void setTimer(){
+//        timer.scheduleAtFixedRate(this,0,1000);
+//    }
     
     public void setFile(){
         this.arq = new File(this.nome + ".txt");
@@ -62,44 +67,67 @@ public class Arquivo extends TimerTask{
         this.arq = null;
     }
     
+    public boolean isNull(){
+        return this.arq == null;
+    }
+    
     public void writeFile(){
+        semaforo.lock();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.arq))) {
             bw.write(this.texto);
             bw.flush();
             bw.close();
+            cond.signalAll();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-               System.out.println(e);
+            System.out.println(e);
+        } finally {
+            semaforo.unlock();
         }
     }
     
     public void readFile(){
-        try(BufferedReader br = new BufferedReader(new FileReader(this.arq))) {
-            StringBuilder inputBuffer = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                inputBuffer.append(line);
-                inputBuffer.append('\n');
+        semaforo.lock();
+        try {
+            if(this.arq != null){
+                int cursor = this.textArea.getCaretPosition();
+                try(BufferedReader br = new BufferedReader(new FileReader(this.arq))) {
+                    StringBuilder inputBuffer = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        inputBuffer.append(line);
+                        inputBuffer.append('\n');
+                    }
+                    this.texto = inputBuffer.toString();
+                    this.textArea.setText(this.texto);
+                    if(cursor >= this.texto.length())
+                        cursor = this.texto.length()-1;
+                    this.textArea.setCaretPosition(cursor);
+                    br.close();
+                } catch (IOException e){
+                    System.out.println(e);
+                }
             }
-            this.texto = inputBuffer.toString();
-            this.TA.setText(this.texto);
-            br.close();
-        } catch (IOException e){
-            System.out.println(e);
+        } finally {
+            semaforo.unlock();
         }
     }
 
-    @Override
-    public void run() {
-        if(this.nome != null){
-            this.texto = TA.getText();
-            this.writeFile();
+//    @Override
+//    public void run() {
+//        if(this.arq != null){
+//            this.texto = textArea.getText();
+//            this.writeFile();
 //            javax.swing.Timer rf = new javax.swing.Timer(500, (ActionEvent evt1) -> {
-//                this.readFile();
+//                if(this.editable){
+//                    int cursor = this.textArea.getCaretPosition();
+//                    this.readFile();
+//                    if(cursor >= this.textArea.getDocument().getLength())
+//                        cursor = this.textArea.getDocument().getLength()-1;
+//                    this.textArea.setCaretPosition(cursor);
+//                }
 //            });
 //            rf.setRepeats(false);
 //            rf.start();
-        }
-    }
-    
+//        }
+//    }
 }
