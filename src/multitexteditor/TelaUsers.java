@@ -6,7 +6,6 @@
 package multitexteditor;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JLabel;
@@ -26,34 +25,31 @@ public final class TelaUsers extends javax.swing.JFrame {
     
     User logado;
     JLabel jLN;
-    int tableIndex;
     DefaultTableModel model;
             
     public TelaUsers(User logado, JLabel jLN) {
         super("Editar/Visualizar usuários");
         initComponents();
+        this.setLocationRelativeTo(null);
         this.logado = logado;
         this.jLN = jLN;
         this.model = (DefaultTableModel) jTable.getModel();
-        createUsersTable(model);
+        createUsersTable();
     }
     
-    public void createUsersTable(DefaultTableModel model){
-        File file = new File( "Usuarios.txt");
-        if (file.exists()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader("Usuarios.txt"))) {
-                String linha1 = reader.readLine(); // lê a primeira linha
-                String linha2 = reader.readLine();
-                while (linha1 != null) {
-                    Object[] row = { linha1, linha2 };
-                    model.addRow(row);
-                    linha1 = reader.readLine(); // lê da terceira até a última linha
-                    linha2 = reader.readLine();
-                }
-                tableIndex = logado.getIndex();
-            }catch(IOException e){
-                System.out.println(e);
+    public void createUsersTable(){
+        try (BufferedReader reader = new BufferedReader(new FileReader("Usuarios.txt"))) {
+            String linha1 = reader.readLine(); // lê a primeira linha
+            String linha2 = reader.readLine();
+            while (linha1 != null) {
+                Object[] row = { linha1, linha2 };
+                model.addRow(row);
+                linha1 = reader.readLine(); // lê da terceira até a última linha
+                linha2 = reader.readLine();
             }
+            reader.close();
+        }catch(IOException e){
+            System.out.println(e);
         }
     }
     
@@ -83,6 +79,7 @@ public final class TelaUsers extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jTextField = new javax.swing.JTextField();
         jButton = new javax.swing.JButton();
+        jButtonRefresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -168,6 +165,13 @@ public final class TelaUsers extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jButtonRefresh.setText("Refresh");
+        jButtonRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRefreshActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -179,13 +183,19 @@ public final class TelaUsers extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(196, 196, 196)
+                .addComponent(jButtonRefresh)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonRefresh)
                 .addContainerGap())
         );
 
@@ -230,6 +240,14 @@ public final class TelaUsers extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonKeyPressed
 
+    private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshActionPerformed
+        // TODO add your handling code here:
+        model = (DefaultTableModel) jTable.getModel();
+        for(int i = model.getRowCount() - 1; i >= 0 ; i--)
+            model.removeRow(i);
+        createUsersTable();
+    }//GEN-LAST:event_jButtonRefreshActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -265,6 +283,7 @@ public final class TelaUsers extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton;
+    private javax.swing.JButton jButtonRefresh;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

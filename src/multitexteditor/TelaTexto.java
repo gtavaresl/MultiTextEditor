@@ -5,6 +5,7 @@
  */
 package multitexteditor;
 
+import java.awt.Frame;
 import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.undo.UndoManager;
@@ -20,17 +21,29 @@ public class TelaTexto extends javax.swing.JFrame {
      * @param logado
      */
     
+    Server servidor;
     User logado;
     Arquivo file;
     UndoManager manager = new UndoManager();
+    Thread twf;
+//    Thread trf;
     
-    public TelaTexto(User logado, String LL) {
+    public TelaTexto(Server servidor, User logado, String LL) {
         super("Editor de texto colaborativo");
         initComponents();
+        this.servidor = servidor;
         this.logado = logado;
         this.file = new Arquivo(jTextArea);
         jTextArea.getDocument().addUndoableEditListener(manager);        
-        file.setTimer();
+        
+        WriteFile wf = new WriteFile(file, jTextArea);
+        twf = new Thread(wf);
+        twf.start();
+        
+//        ReadFile rf = new ReadFile(file, jTextArea);
+//        trf = new Thread(rf);
+//        trf.start();
+        
         jLabelNome.setText("Usuário: " + logado.getNome());
         if(LL != null)
             jLabelLastLogin.setText("Último login havia sido: " + LL);
@@ -65,6 +78,7 @@ public class TelaTexto extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabelNome = new javax.swing.JLabel();
         jLabelLastLogin = new javax.swing.JLabel();
+        jButtonDisconnect = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemNovo = new javax.swing.JMenuItem();
@@ -72,12 +86,18 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuEdit = new javax.swing.JMenu();
         jMenuItemUndo = new javax.swing.JMenuItem();
         jMenuItemRedo = new javax.swing.JMenuItem();
-        jMenuItemRemoveChar = new javax.swing.JMenuItem();
+        jMenuItemFind = new javax.swing.JMenuItem();
         jMenuUsers = new javax.swing.JMenu();
         jMenuItemUsers = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setName("frameTexto"); // NOI18N
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jTextArea.setColumns(20);
         jTextArea.setRows(5);
@@ -139,13 +159,25 @@ public class TelaTexto extends javax.swing.JFrame {
                         .addComponent(jLabelFileName))
                     .addComponent(jButtonClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jLabelNome.setText("jLabel1");
 
         jLabelLastLogin.setText("jLabel2");
+
+        jButtonDisconnect.setText("Disconnect");
+        jButtonDisconnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDisconnectActionPerformed(evt);
+            }
+        });
+        jButtonDisconnect.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jButtonDisconnectKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -153,18 +185,25 @@ public class TelaTexto extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelNome, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabelNome, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                     .addComponent(jLabelLastLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonDisconnect)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabelNome, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelLastLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabelNome, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelLastLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jButtonDisconnect)))
                 .addContainerGap())
         );
 
@@ -214,14 +253,14 @@ public class TelaTexto extends javax.swing.JFrame {
         });
         jMenuEdit.add(jMenuItemRedo);
 
-        jMenuItemRemoveChar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/abc.png"))); // NOI18N
-        jMenuItemRemoveChar.setText("Remover caracteres");
-        jMenuItemRemoveChar.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemFind.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemFind.setText("Encontrar");
+        jMenuItemFind.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemRemoveCharActionPerformed(evt);
+                jMenuItemFindActionPerformed(evt);
             }
         });
-        jMenuEdit.add(jMenuItemRemoveChar);
+        jMenuEdit.add(jMenuItemFind);
 
         jMenuBar1.add(jMenuEdit);
 
@@ -256,7 +295,8 @@ public class TelaTexto extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -266,14 +306,14 @@ public class TelaTexto extends javax.swing.JFrame {
         // TODO add your handling code here:
         manager.discardAllEdits(); //descarta todos as edições da textArea
         TextBox TB;
-        TB = new TextBox(manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.file, "Criar arquivo");
+        TB = new TextBox(manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Criar arquivo");
         TB.setVisible(true);
     }//GEN-LAST:event_jMenuItemNovoActionPerformed
 
     private void jMenuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAbrirActionPerformed
         // TODO add your handling code here:
         manager.discardAllEdits(); //descarta todos as edições da textArea
-        TextBox TB = new TextBox(manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.file, "Abrir arquivo");
+        TextBox TB = new TextBox(manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Abrir arquivo");
         TB.setVisible(true);
     }//GEN-LAST:event_jMenuItemAbrirActionPerformed
 
@@ -325,21 +365,49 @@ public class TelaTexto extends javax.swing.JFrame {
         redo.actionPerformed(evt);
     }//GEN-LAST:event_jMenuItemRedoActionPerformed
 
-    private void jMenuItemRemoveCharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRemoveCharActionPerformed
+    private void jMenuItemFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindActionPerformed
         // TODO add your handling code here:
-        RemoveChar RC = new RemoveChar();
-        RC.setVisible(true);
-    }//GEN-LAST:event_jMenuItemRemoveCharActionPerformed
+        TextBox TB = new TextBox(manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Encontre uma palavra");
+        TB.setVisible(true);
+    }//GEN-LAST:event_jMenuItemFindActionPerformed
 
     private void jTextAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextAreaKeyPressed
         // TODO add your handling code here:
         if((evt.getKeyCode() == KeyEvent.VK_S) && (evt.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)
             jButtonSave.doClick();
+        if((evt.getKeyCode() == KeyEvent.VK_W) && (evt.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)
+            jButtonClose.doClick();
     }//GEN-LAST:event_jTextAreaKeyPressed
 
     private void jTextAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextAreaKeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextAreaKeyReleased
+
+    private void jButtonDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisconnectActionPerformed
+        // TODO add your handling code here:
+        Frame[] frames = Frame.getFrames();
+        for (Frame frame : frames) {
+            if (frame.getName().equals("frameServidor")) {
+                continue;
+            }
+            frame.dispose();
+        }
+        servidor.disconnectClient(logado);
+        this.dispose();
+    }//GEN-LAST:event_jButtonDisconnectActionPerformed
+
+    private void jButtonDisconnectKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonDisconnectKeyPressed
+        // TODO add your handling code here:
+        char key = evt.getKeyChar();
+        if(key == '\n'){
+            jButtonDisconnect.doClick();
+        }
+    }//GEN-LAST:event_jButtonDisconnectKeyPressed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        jButtonDisconnect.doClick();
+    }//GEN-LAST:event_formWindowClosing
     
     /**
      * @param args the command line arguments
@@ -378,6 +446,7 @@ public class TelaTexto extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonClose;
+    private javax.swing.JButton jButtonDisconnect;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JLabel jLabelFileName;
     private javax.swing.JLabel jLabelFileSaved;
@@ -387,9 +456,9 @@ public class TelaTexto extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuEdit;
     private javax.swing.JMenu jMenuFile;
     private javax.swing.JMenuItem jMenuItemAbrir;
+    private javax.swing.JMenuItem jMenuItemFind;
     private javax.swing.JMenuItem jMenuItemNovo;
     private javax.swing.JMenuItem jMenuItemRedo;
-    private javax.swing.JMenuItem jMenuItemRemoveChar;
     private javax.swing.JMenuItem jMenuItemUndo;
     private javax.swing.JMenuItem jMenuItemUsers;
     private javax.swing.JMenu jMenuUsers;

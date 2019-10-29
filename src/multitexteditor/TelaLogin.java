@@ -19,13 +19,16 @@ public class TelaLogin extends javax.swing.JFrame {
      * Creates new form TelaLogin
      */
     
+    public Server servidor;
     private User logado;
     private String LL;
     private final SimpleDateFormat fmt;        
     
-    public TelaLogin() {
+    public TelaLogin(Server servidor) {
         super("Login");
         initComponents();
+        this.servidor = servidor;
+        this.setLocationRelativeTo(null);
         this.logado = null;
         this.fmt = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     }
@@ -35,8 +38,8 @@ public class TelaLogin extends javax.swing.JFrame {
         if(!text.isEmpty()){
             Date data = new Date();
             logado = new User(text,fmt.format(data));
-            LL = logado.updateUsers();
-            TelaTexto TT = new TelaTexto(logado,LL);
+            LL = servidor.addClient(logado);
+            TelaTexto TT = new TelaTexto(servidor,logado,LL);
             TT.setVisible(true);
             this.dispose();
         }else
@@ -58,7 +61,8 @@ public class TelaLogin extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setName("frameLogin"); // NOI18N
         setResizable(false);
 
         jTextUser.addActionListener(new java.awt.event.ActionListener() {
@@ -84,9 +88,9 @@ public class TelaLogin extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("USER:");
+        jLabel1.setText("User:");
 
-        jButton1.setText("Sair");
+        jButton1.setText("Exit");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -99,9 +103,9 @@ public class TelaLogin extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextUser))
                     .addGroup(jPanel1Layout.createSequentialGroup()

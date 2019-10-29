@@ -14,10 +14,10 @@ public class MultiTextEditor {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-        TelaLogin TL;
-        TL = new TelaLogin();
-        TL.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        // TODO code application logic here
+//        TelaLogin TL;
+//        TL = new TelaLogin();
+//        TL.setVisible(true);
+//    }
 }
