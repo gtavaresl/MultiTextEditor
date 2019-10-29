@@ -19,13 +19,15 @@ public class TelaLogin extends javax.swing.JFrame {
      * Creates new form TelaLogin
      */
     
+    public Server servidor;
     private User logado;
     private String LL;
     private final SimpleDateFormat fmt;        
     
-    public TelaLogin() {
+    public TelaLogin(Server servidor) {
         super("Login");
         initComponents();
+        this.servidor = servidor;
         this.setLocationRelativeTo(null);
         this.logado = null;
         this.fmt = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -36,8 +38,8 @@ public class TelaLogin extends javax.swing.JFrame {
         if(!text.isEmpty()){
             Date data = new Date();
             logado = new User(text,fmt.format(data));
-            LL = logado.updateUsers();
-            TelaTexto TT = new TelaTexto(logado,LL);
+            LL = servidor.addClient(logado);
+            TelaTexto TT = new TelaTexto(servidor,logado,LL);
             TT.setVisible(true);
             this.dispose();
         }else
@@ -59,7 +61,8 @@ public class TelaLogin extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setName("frameLogin"); // NOI18N
         setResizable(false);
 
         jTextUser.addActionListener(new java.awt.event.ActionListener() {

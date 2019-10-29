@@ -89,7 +89,7 @@ public class Arquivo { //extends TimerTask{
         semaforo.lock();
         try {
             if(this.arq != null){
-                int cursor = this.textArea.getCaretPosition();
+//                int cusrsor = this.textArea.getCaretPosition();
                 try(BufferedReader br = new BufferedReader(new FileReader(this.arq))) {
                     StringBuilder inputBuffer = new StringBuilder();
                     String line;
@@ -99,9 +99,9 @@ public class Arquivo { //extends TimerTask{
                     }
                     this.texto = inputBuffer.toString();
                     this.textArea.setText(this.texto);
-                    if(cursor >= this.texto.length())
-                        cursor = this.texto.length()-1;
-                    this.textArea.setCaretPosition(cursor);
+//                    if(cursor >= this.texto.length())
+//                        cursor = this.texto.length()-1;
+//                    this.textArea.setCaretPosition(cursor);
                     br.close();
                 } catch (IOException e){
                     System.out.println(e);
