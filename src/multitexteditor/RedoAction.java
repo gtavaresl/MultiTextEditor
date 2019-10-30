@@ -14,18 +14,26 @@ import javax.swing.undo.UndoManager;
  * @author lucas
  */
 class RedoAction extends UndoRedoAction {
-  public RedoAction(UndoManager manager, String name) {
-    super(manager, name);
-    setErrorMessage("Não é possível refazer");
-    setErrorTitle("Erro ao refazer");
-  }
-
-  @Override
-  public void actionPerformed(ActionEvent actionEvent) {
-    try {
-      undoManager.redo();
-    } catch (CannotRedoException cannotRedoException) {
-      showMessage(actionEvent.getSource());
+    
+    /** Método construtor da classe RedoAction */
+    public RedoAction(UndoManager manager, String name) {
+        super(manager, name);
+        this.setAlert();
     }
-  }
+    
+    /** Método chamado para realizar a função de refazer modificações */
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        try {
+            undoManager.redo(); //refaz as modificações
+        } catch (CannotRedoException cannotRedoException) {
+            showMessage(actionEvent.getSource()); //mensagem de erro
+        }
+    }
+    
+    /** Método que define as mensagens de erro */
+    public final void setAlert(){
+        setErrorMessage("Não é possível refazer");
+        setErrorTitle("Erro ao refazer");
+    }
 }

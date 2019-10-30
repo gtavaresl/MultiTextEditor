@@ -5,9 +5,13 @@
  */
 package multitexteditor;
 
+import java.awt.Frame;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -23,15 +27,25 @@ public final class TelaUsers extends javax.swing.JFrame {
      * @param users
      */
     
-    Server servidor;
-    User logado;
-    JLabel jLN;
-    DefaultTableModel model;
+    private final Server servidor;
+    private final User logado;
+    private final JLabel jLN;
+    private DefaultTableModel model;
+    private final InputStream imgStream;
+    private final BufferedImage myImg;
             
-    public TelaUsers(Server servidor, User logado, JLabel jLN) {
-        super("Editar/Visualizar usuários");
+    /** Método construtor da classe TelaUsers
+     * @param servidor
+     * @param logado
+     * @param jLN
+     * @throws java.io.IOException */
+    public TelaUsers(Server servidor, User logado, JLabel jLN) throws IOException {
+        super("Editar/Visualizar usuários"); //altera titulo do frame 
+        this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.myImg = ImageIO.read(imgStream);
+        this.setIconImage(this.myImg);
+        this.setLocationRelativeTo(null); //centraliza o frame
         this.servidor = servidor;
         this.logado = logado;
         this.jLN = jLN;
@@ -40,11 +54,12 @@ public final class TelaUsers extends javax.swing.JFrame {
             this.jLabelNome.setVisible(false);
             this.jButtonEdit.setVisible(false);
         }else
-            this.setName(this.getName() + "-" + logado.getNome());
+            this.setName(this.getName() + "-" + logado.getNome()); //altera o nome do frame
         this.model = (DefaultTableModel) jTable.getModel();
         createUsersTable();
     }
     
+    /** Método que cria uma tabela com os clientes */
     public void createUsersTable(){
         try (BufferedReader reader = new BufferedReader(new FileReader("Usuarios.txt"))) {
             String linha1 = reader.readLine(); // lê a primeira linha
@@ -55,21 +70,28 @@ public final class TelaUsers extends javax.swing.JFrame {
                 linha1 = reader.readLine(); // lê da terceira até a última linha
                 linha2 = reader.readLine();
             }
-            reader.close();
+            reader.close(); //fecha o BufferedReader
         }catch(IOException e){
 //            System.err.println(e);
         }
     }
     
+    /** Método que edita informações do usuário */
     public void editUser() {
         if(!jTextField.getText().isEmpty()){
-            logado.editNome(jTextField.getText());
-            jTextField.setText("");
+            Frame[] frames = Frame.getFrames(); //vetor com os frames abertos
+            for (Frame frame : frames) {
+                if (frame.getName().contains("-"+logado.getNome())) { //se o nome do frame contém "-NameUser", altera esse nome
+                    frame.setName(frame.getName().replaceFirst("-"+logado.getNome(), "-"+jTextField.getText())); //troca os nomes
+                }
+            }
+            logado.editNome(jTextField.getText()); //altera o nome do usuario logado
+            jTextField.setText(""); //esvazia o textField
             model.setValueAt(logado.getNome(), logado.getIndex(), 0);
             jLN.setText("Usuário: " + logado.getNome());
-            servidor.updateJList();
+            servidor.updateJList(); //atualiza lista do servidor
         }else
-            JOptionPane.showMessageDialog(null, "Insira um nome");
+            JOptionPane.showMessageDialog(null, "Insira um nome"); //mensagem de erro
     }
     
     /**
@@ -226,11 +248,13 @@ public final class TelaUsers extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldActionPerformed
 
+    /** Método que edita informações do usuario ao apertar o jButtonEdit */
     private void jButtonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditActionPerformed
         // TODO add your handling code here:
         editUser();
     }//GEN-LAST:event_jButtonEditActionPerformed
 
+    /** Método que edita informações do usuario ao pressionar ENTER enquanto está no jTextField */
     private void jTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldKeyPressed
         // TODO add your handling code here:
         char key = evt.getKeyChar();
@@ -239,6 +263,7 @@ public final class TelaUsers extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextFieldKeyPressed
 
+    /** Método que edita informações do usuario ao pressionar ENTER enquanto está no jButtonEdit */
     private void jButtonEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonEditKeyPressed
         // TODO add your handling code here:
         char key = evt.getKeyChar();
@@ -247,6 +272,7 @@ public final class TelaUsers extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonEditKeyPressed
 
+    /** Método que atualiza a tabela de usuário ao apertar o jButtonRefresh */
     private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshActionPerformed
         // TODO add your handling code here:
         model = (DefaultTableModel) jTable.getModel();

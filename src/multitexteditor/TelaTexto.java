@@ -7,6 +7,10 @@ package multitexteditor;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 import javax.swing.undo.UndoManager;
 
 /**
@@ -20,19 +24,29 @@ public class TelaTexto extends javax.swing.JFrame {
      * @param logado
      */
     
-    Server servidor;
-    User logado;
-    Arquivo file;
-    UndoManager manager = new UndoManager();
-    Thread twf;
-//    Thread trf;
+    private final Server servidor;
+    private final User logado;
+    private final Arquivo file;
+    private final UndoManager manager = new UndoManager();
+    private Thread twf;
+    //Thread trf;
+    private final InputStream imgStream;
+    private final BufferedImage myImg;
     
-    public TelaTexto(Server servidor, User logado, String LL) {
-        super("Editor de texto colaborativo");
+    /** Método construtor da classe TelaTexto
+     * @param servidor
+     * @param logado
+     * @param LL
+     * @throws java.io.IOException */
+    public TelaTexto(Server servidor, User logado, String LL) throws IOException {
+        super("Editor de texto colaborativo"); //altera o titulo do frame
+        this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         initComponents();
+        this.myImg = ImageIO.read(imgStream);
+        this.setIconImage(this.myImg);
         this.servidor = servidor;
         this.logado = logado;
-        this.setName(this.getName() + "-" + logado.getNome());
+        this.setName(this.getName() + "-" + logado.getNome()); //altera o nome do frame de acordo com o cliente
         this.file = new Arquivo(jTextArea);
         jTextArea.getDocument().addUndoableEditListener(manager);        
         
@@ -248,6 +262,7 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuEdit.add(jMenuItemRedo);
 
         jMenuItemFind.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemFind.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multitexteditor/search.png"))); // NOI18N
         jMenuItemFind.setText("Encontrar");
         jMenuItemFind.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -296,27 +311,42 @@ public class TelaTexto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /** Método que chama o frame TextBox ao apertar o menuItem jMenuItemNovo */
     private void jMenuItemNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNovoActionPerformed
         // TODO add your handling code here:
         manager.discardAllEdits(); //descarta todos as edições da textArea
         TextBox TB;
-        TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Criar arquivo");
-        TB.setVisible(true);
+        try {
+            TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Criar arquivo");
+            TB.setVisible(true);
+        } catch (IOException ex) {
+        }
     }//GEN-LAST:event_jMenuItemNovoActionPerformed
 
+    /** Método que chama o frame TextBox ao apertar o menuItem jMenuItemAbrir */
     private void jMenuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAbrirActionPerformed
         // TODO add your handling code here:
         manager.discardAllEdits(); //descarta todos as edições da textArea
-        TextBox TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Abrir arquivo");
-        TB.setVisible(true);
+        TextBox TB;
+        try {
+            TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Abrir arquivo");
+            TB.setVisible(true);
+        } catch (IOException ex) {
+        }
     }//GEN-LAST:event_jMenuItemAbrirActionPerformed
 
+    /** Método que chama o frame TelaUsers ao apertar o menuItem jMenuItemUsers */
     private void jMenuItemUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUsersActionPerformed
         // TODO add your handling code here:
-        TelaUsers LU = new TelaUsers(servidor, logado, jLabelNome);
-        LU.setVisible(true);
+        TelaUsers LU;
+        try {
+            LU = new TelaUsers(servidor, logado, jLabelNome);
+            LU.setVisible(true);
+        } catch (IOException ex) {
+        }
     }//GEN-LAST:event_jMenuItemUsersActionPerformed
 
+    /** Método que fecha o arquivo que está sendo editado */
     private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
         // TODO add your handling code here:
         servidor.stopThread(file.getThread()); // para a thread de escrever o arquivo
@@ -337,9 +367,10 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuItemRedo.setEnabled(false);
     }//GEN-LAST:event_jButtonCloseActionPerformed
 
+    /** Método que força o texto a ser salvo no arquivo */
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
         // TODO add your handling code here:
-        file.writeFile();
+        file.writeFile(); //escreve no arquivo
 //        aparecer mensagem de "file saved" por 5 segundos
         Timer timer = new Timer(5000, (ActionEvent evt1) -> {
             jLabelFileSaved.setVisible(false);
@@ -349,29 +380,37 @@ public class TelaTexto extends javax.swing.JFrame {
         jLabelFileSaved.setVisible(true);
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
+    /** Método que realiza a função desfazer modificações ao apertar o menuItem jMenuItemUndo */
     private void jMenuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUndoActionPerformed
         // TODO add your handling code here:
         UndoAction undo = new UndoAction(manager, "Undo");
         undo.actionPerformed(evt);
     }//GEN-LAST:event_jMenuItemUndoActionPerformed
 
+    /** Método que realiza a função refazer modificações ao apertar o menuItem jMenuItemRedo */
     private void jMenuItemRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRedoActionPerformed
         // TODO add your handling code here:
         RedoAction redo = new RedoAction(manager, "Redo");
         redo.actionPerformed(evt);
     }//GEN-LAST:event_jMenuItemRedoActionPerformed
 
+    /** Método que realiza a função procurar próximo ao apertar o menuItem jMenuItemFind */
     private void jMenuItemFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindActionPerformed
         // TODO add your handling code here:
-        TextBox TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Encontre uma palavra");
-        TB.setVisible(true);
+        TextBox TB;
+        try {
+            TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Encontre uma palavra");
+            TB.setVisible(true);
+        } catch (IOException ex) {
+        }
     }//GEN-LAST:event_jMenuItemFindActionPerformed
 
+    /** Método que salva e fecha os arquivos, dependendo os atalhos pressionados enquanto no jTextArea */
     private void jTextAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextAreaKeyPressed
         // TODO add your handling code here:
-        if((evt.getKeyCode() == KeyEvent.VK_S) && (evt.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)
+        if((evt.getKeyCode() == KeyEvent.VK_S) && (evt.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) //CTRL+S
             jButtonSave.doClick();
-        if((evt.getKeyCode() == KeyEvent.VK_W) && (evt.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)
+        if((evt.getKeyCode() == KeyEvent.VK_W) && (evt.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) //CTRL+W
             jButtonClose.doClick();
     }//GEN-LAST:event_jTextAreaKeyPressed
 
@@ -379,15 +418,15 @@ public class TelaTexto extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextAreaKeyReleased
 
+    /** Método que desconecta o usuário atual e fecha todos os seus frames derivados */
     private void jButtonDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisconnectActionPerformed
         // TODO add your handling code here:
         if(!file.isNull()) // se tem arquivo, parar a thread de write
             servidor.stopThread(file.getThread());
-        
         servidor.disconnectClient(logado);
-        //servidor.disconnectAll();
     }//GEN-LAST:event_jButtonDisconnectActionPerformed
 
+    /** Método que desconecta o usuário atual e fecha todos os seus frames derivados ao pressionar o jButtonDisconnect */
     private void jButtonDisconnectKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonDisconnectKeyPressed
         // TODO add your handling code here:
         char key = evt.getKeyChar();
@@ -396,6 +435,7 @@ public class TelaTexto extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonDisconnectKeyPressed
 
+    /** Método que, ao fechar o frame atual, também desconecta o usuário atual */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
         jButtonDisconnect.doClick();

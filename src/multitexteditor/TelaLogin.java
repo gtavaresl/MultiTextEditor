@@ -5,8 +5,12 @@
  */
 package multitexteditor;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,18 +26,28 @@ public class TelaLogin extends javax.swing.JFrame {
     public Server servidor;
     private User logado;
     private String LL;
-    private final SimpleDateFormat fmt;        
+    private final SimpleDateFormat fmt;
+    private final InputStream imgStream;
+    private final BufferedImage myImg;
     
-    public TelaLogin(Server servidor) {
+    /** Método construtor da classe TelaLogin
+     * @param servidor
+     * @throws java.io.IOException */
+    public TelaLogin(Server servidor) throws IOException {
         super("Login");
+        this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         initComponents();
+        this.myImg = ImageIO.read(imgStream);
+        this.setIconImage(this.myImg);
         this.servidor = servidor;
         this.setLocationRelativeTo(null);
         this.logado = null;
-        this.fmt = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        this.fmt = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //formatação da data
     }
 
-    public void login(){
+    /** Método que faz o login dos clientes
+     * @throws java.io.IOException */
+    public void login() throws IOException{
         String text = jTextUser.getText();
         if(!text.isEmpty()){
             Date data = new Date();
@@ -41,9 +55,9 @@ public class TelaLogin extends javax.swing.JFrame {
             LL = servidor.addClient(logado);
             TelaTexto TT = new TelaTexto(servidor,logado,LL);
             TT.setVisible(true);
-            this.dispose();
+            this.dispose(); //fecha o frame atual
         }else
-            JOptionPane.showMessageDialog(null, "Insira um usuário");
+            JOptionPane.showMessageDialog(null, "Insira um usuário"); //mensagem de erro
     }
     
     /**
@@ -148,27 +162,32 @@ public class TelaLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextUserActionPerformed
 
+    /** Método que chama a função login ao clicar no botão Login */
     private void jButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActionPerformed
-        // TODO add your handling code here:
-        login();
+        try {
+            // TODO add your handling code here:
+            login();
+        } catch (IOException ex) {
+        }
     }//GEN-LAST:event_jButtonActionPerformed
 
     private void jButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonKeyPressed
         // TODO add your handling code here:
-        char key = evt.getKeyChar();
-        if(key == '\n'){
-            login();
-        }
     }//GEN-LAST:event_jButtonKeyPressed
 
+    /** Método que chama a função login ao apertar ENTER com o cursor no textBox */
     private void jTextUserKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextUserKeyPressed
         // TODO add your handling code here:
         char key = evt.getKeyChar();
         if(key == '\n'){
-            login();
+            try {
+                login();
+            } catch (IOException ex) {
+            }
         }
     }//GEN-LAST:event_jTextUserKeyPressed
 
+    /** Método que encerra o programa ao clicar no botão Exit */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         System.exit(0);

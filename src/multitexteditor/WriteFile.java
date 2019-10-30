@@ -15,14 +15,21 @@ import javax.swing.Timer;
  */
 public class WriteFile implements Runnable {
 
+    /** Atributo que representa a classe Arquivo */
     public final Arquivo file;
+    
+    /** Atributo que representa o JTextArea */
     public JTextArea textArea;
     
+    /** Método construtor da classe WriteFile
+     * @param file
+     * @param textArea */
     public WriteFile(Arquivo file, JTextArea textArea){
         this.file = file;
         this.textArea = textArea;
     }
     
+    /** Método que paraleliza a escrita do arquivo */
     @Override
     public void run() {
         Timer timer = new Timer(10, (ActionEvent evt1) -> {

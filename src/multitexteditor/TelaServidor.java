@@ -5,6 +5,10 @@
  */
 package multitexteditor;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 
 /**
@@ -17,13 +21,20 @@ public class TelaServidor extends javax.swing.JFrame {
      * Creates new form TelaServidor
      */
     
-    Server servidor;
-    DefaultListModel<String> model;
+    private final Server servidor;
+    private final DefaultListModel<String> model;
+    private final InputStream imgStream;
+    private final BufferedImage myImg;
     
-    public TelaServidor() {
+    /** Método construtor da classe TelaServidor
+     * @throws java.io.IOException */
+    public TelaServidor() throws IOException {
         super("Servidor");
+        this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         initComponents();
         this.model = new DefaultListModel<>();
+        this.myImg = ImageIO.read(imgStream);
+        this.setIconImage(this.myImg);
         servidor = new Server(jListClients);
         jListClients.setModel(this.model);
         jScrollPane1.setVisible(false);
@@ -100,9 +111,8 @@ public class TelaServidor extends javax.swing.JFrame {
                         .addComponent(jToggleButtonStatus)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabelStatus))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jButtonLogin)
-                        .addComponent(jButtonListUsers)))
+                    .addComponent(jButtonLogin)
+                    .addComponent(jButtonListUsers))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -182,9 +192,10 @@ public class TelaServidor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /** Método que altera o status do toggleButton e atualiza o frame */
     private void jToggleButtonStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonStatusActionPerformed
         // TODO add your handling code here:
-        servidor.changeStatus();
+        servidor.changeStatus(); //altera status do botão
         jLabelStatus.setText(servidor.getStatusText());
         jButtonLogin.setEnabled(servidor.getStatus());
         jScrollPane1.setVisible(servidor.getStatus());
@@ -194,12 +205,18 @@ public class TelaServidor extends javax.swing.JFrame {
             servidor.disconnectAll();
     }//GEN-LAST:event_jToggleButtonStatusActionPerformed
 
+    /** Método que cria o frame TelaLogin ao clicar no botão AddClient */
     private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
         // TODO add your handling code here:
-        TelaLogin TL = new TelaLogin(servidor);
-        TL.setVisible(true);
+        TelaLogin TL;
+        try {
+            TL = new TelaLogin(servidor);
+            TL.setVisible(true);
+        } catch (IOException ex) {
+        }
     }//GEN-LAST:event_jButtonLoginActionPerformed
 
+    /** Método que é chamado quando o ENTER é pressionado enquanto o toggleButton está selecionado */
     private void jToggleButtonStatusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jToggleButtonStatusKeyPressed
         // TODO add your handling code here:
         char key = evt.getKeyChar();
@@ -208,6 +225,7 @@ public class TelaServidor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jToggleButtonStatusKeyPressed
 
+    /** Método que chama a função Login ao apertar ENTER enquanto o jButton está selecionado */
     private void jButtonLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonLoginKeyPressed
         // TODO add your handling code here:
         char key = evt.getKeyChar();
@@ -216,12 +234,18 @@ public class TelaServidor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonLoginKeyPressed
 
+    /** Método que chama o frame TelaUsers ao apertar o botão jButtonListUsers */
     private void jButtonListUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListUsersActionPerformed
         // TODO add your handling code here:
-        TelaUsers TU = new TelaUsers(servidor, null, null);
-        TU.setVisible(true);
+        TelaUsers TU;
+        try {
+            TU = new TelaUsers(servidor, null, null);
+            TU.setVisible(true);
+        } catch (IOException ex) {
+        }
     }//GEN-LAST:event_jButtonListUsersActionPerformed
 
+    /** Método que desconecta todos os clientes logados ao apertar o botão jButtonDisconnect */
     private void jButtonDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisconnectActionPerformed
         // TODO add your handling code here:
         servidor.disconnectAll();
@@ -252,7 +276,10 @@ public class TelaServidor extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new TelaServidor().setVisible(true);
+            try {
+                new TelaServidor().setVisible(true);
+            } catch (IOException ex) {
+            }
         });
     }
 

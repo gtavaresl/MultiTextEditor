@@ -5,6 +5,10 @@
  */
 package multitexteditor;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -24,21 +28,24 @@ public class TextBox extends javax.swing.JFrame {
      */
     
     private final String mode;
-    Server servidor;
-    Arquivo file;
-    JTextArea TA;
-    JButton CB;
-    JButton S;
-    JLabel FN;
-    JMenuItem N;
-    JMenuItem O;
-    JMenuItem U;
-    JMenuItem R;
-    JMenuItem F;
-    UndoManager manager;
+    private final Server servidor;
+    private final Arquivo file;
+    private final JTextArea TA;
+    private final JButton CB;
+    private final JButton S;
+    private final JLabel FN;
+    private final JMenuItem N;
+    private final JMenuItem O;
+    private final JMenuItem U;
+    private final JMenuItem R;
+    private final JMenuItem F;
+    private final UndoManager manager;
+    private final InputStream imgStream;
+    private final BufferedImage myImg;
     
     
     /** Método construtor do frame TextBox
+     * @param servidor
      * @param logado
      * @param manager
      * @param TA
@@ -51,14 +58,18 @@ public class TextBox extends javax.swing.JFrame {
      * @param R
      * @param F
      * @param file
-     * @param mode */
-    public TextBox(Server servidor, User logado, UndoManager manager, JTextArea TA, JButton CB, JButton S, JLabel FN, JMenuItem N, JMenuItem O,JMenuItem U, JMenuItem R, JMenuItem F, Arquivo file, String mode) {
+     * @param mode
+     * @throws java.io.IOException */
+    public TextBox(Server servidor, User logado, UndoManager manager, JTextArea TA, JButton CB, JButton S, JLabel FN, JMenuItem N, JMenuItem O,JMenuItem U, JMenuItem R, JMenuItem F, Arquivo file, String mode) throws IOException {
         super(mode);
+        this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         this.mode = mode;
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.myImg = ImageIO.read(imgStream);
+        this.setIconImage(this.myImg);
+        this.setLocationRelativeTo(null); //centraliza o frame
         this.manager = manager;
-        this.setName(this.getName() + "-" + logado.getNome());
+        this.setName(this.getName() + "-" + logado.getNome()); //altera o nome do frame
         this.servidor = servidor;
         this.TA = TA;
         this.CB = CB;
@@ -70,7 +81,7 @@ public class TextBox extends javax.swing.JFrame {
         this.R = R;
         this.F = F;
         this.file = file;
-        if(!mode.equals("Encontre uma palavra")){
+        if(!mode.equals("Encontre uma palavra")){ //significa que o frame foi chamado pela função novo ou abrir arquivo
             jRadioButtonUp.setVisible(false);
             jRadioButtonDown.setVisible(false);
         }
@@ -78,6 +89,7 @@ public class TextBox extends javax.swing.JFrame {
             //adiciona os RadioButtons ao grupo de botões
             bGroupUpDown.add(jRadioButtonUp);
             bGroupUpDown.add(jRadioButtonDown);
+            jButton.setText("Localizar");
         }
     }
 
@@ -148,7 +160,7 @@ public class TextBox extends javax.swing.JFrame {
                 else
                     JOptionPane.showMessageDialog(null, "Não há ocorrências nessa direção."); //mensagem de erro
             }
-            this.dispose();
+            this.dispose(); //fecha o frame
         }
         else{
             JOptionPane.showMessageDialog(null, "Digite um texto."); //mensagem de erro
@@ -238,7 +250,7 @@ public class TextBox extends javax.swing.JFrame {
                         .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -280,6 +292,7 @@ public class TextBox extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldActionPerformed
 
+    /** Método que determina a funcionalidade do jButton */
     private void jButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActionPerformed
         // TODO add your handling code here:
         if(!mode.equals("Encontre uma palavra"))
@@ -292,6 +305,7 @@ public class TextBox extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonActionPerformed
 
+    /** Método que determina a funcionalidade do jButton */
     private void jButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonKeyPressed
         // TODO add your handling code here:
         char key = evt.getKeyChar();
@@ -307,6 +321,7 @@ public class TextBox extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonKeyPressed
 
+    /** Método que determina a funcionalidade do jButton */
     private void jTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldKeyPressed
         // TODO add your handling code here:
         char key = evt.getKeyChar();
