@@ -3,14 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor/src/multitexteditor/Arquivo.java</file>
-            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor/src/multitexteditor/TextBox.java</file>
-            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor/src/multitexteditor/User.java</file>
-            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor/src/multitexteditor/TelaLogin.java</file>
-            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor/src/multitexteditor/Server.java</file>
-            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor/src/multitexteditor/TelaUsers.java</file>
-            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor/src/multitexteditor/TelaServidor.java</file>
-            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor/src/multitexteditor/TelaTexto.java</file>
+            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor-lucas/src/multitexteditor/WriteFile.java</file>
+            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor-lucas/src/multitexteditor/Arquivo.java</file>
+            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor-lucas/src/multitexteditor/TextBox.java</file>
+            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor-lucas/src/multitexteditor/TelaServidor.java</file>
+            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor-lucas/src/multitexteditor/TelaUsers.java</file>
+            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor-lucas/src/multitexteditor/Server.java</file>
+            <file>file:/C:/Users/Gabriell/Documents/Java/MultiTextEditor-lucas/src/multitexteditor/TelaTexto.java</file>
         </group>
     </open-files>
 </project-private>

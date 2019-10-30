@@ -60,15 +60,22 @@ public class Server {
         });
     }
     
+    public void startThread(Thread t){
+        t.start();
+    }
+    
+    public void stopThread(Thread t){
+        t.interrupt();
+    }
+    
     public void disconnectClient(User client){
         this.clients.remove(client);
         this.updateJList();
         Frame[] frames = Frame.getFrames();
         for (Frame frame : frames) {
-            if (frame.getName().equals(client.getNome())) {
+            if (frame.getName().contains("-"+client.getNome()) == true && frame.getName().equals("frameServidor") == false) {
                 frame.dispose();
             }
-//            frame.dispose();
         }
     }
     
@@ -77,7 +84,7 @@ public class Server {
         this.updateJList();
         Frame[] frames = Frame.getFrames();
         for (Frame frame : frames) {
-            if (frame.getName().equals("frameServidor")) {
+            if (frame.getName().equals("frameServidor") || frame.getName().equals("frameListUsers")) {
                 continue;
             }
             frame.dispose();

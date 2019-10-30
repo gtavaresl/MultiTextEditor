@@ -23,21 +23,24 @@ public final class TelaUsers extends javax.swing.JFrame {
      * @param users
      */
     
+    Server servidor;
     User logado;
     JLabel jLN;
     DefaultTableModel model;
             
-    public TelaUsers(User logado, JLabel jLN) {
+    public TelaUsers(Server servidor, User logado, JLabel jLN) {
         super("Editar/Visualizar usuários");
         initComponents();
         this.setLocationRelativeTo(null);
+        this.servidor = servidor;
         this.logado = logado;
         this.jLN = jLN;
-        if(logado == null){ // tela invocada pelo servidor
+        if(this.logado == null){ // tela invocada pelo servidor
             this.jTextField.setVisible(false);
             this.jLabelNome.setVisible(false);
             this.jButtonEdit.setVisible(false);
-        }
+        }else
+            this.setName(this.getName() + "-" + logado.getNome());
         this.model = (DefaultTableModel) jTable.getModel();
         createUsersTable();
     }
@@ -64,6 +67,7 @@ public final class TelaUsers extends javax.swing.JFrame {
             jTextField.setText("");
             model.setValueAt(logado.getNome(), logado.getIndex(), 0);
             jLN.setText("Usuário: " + logado.getNome());
+            servidor.updateJList();
         }else
             JOptionPane.showMessageDialog(null, "Insira um nome");
     }
@@ -87,7 +91,7 @@ public final class TelaUsers extends javax.swing.JFrame {
         jButtonRefresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setName("frameTexto"); // NOI18N
+        setName("frameListUsers"); // NOI18N
         setResizable(false);
 
         jTable.setBackground(new java.awt.Color(240, 240, 240));

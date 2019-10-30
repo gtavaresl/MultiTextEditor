@@ -5,7 +5,6 @@
  */
 package multitexteditor;
 
-import java.awt.Frame;
 import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.undo.UndoManager;
@@ -33,23 +32,16 @@ public class TelaTexto extends javax.swing.JFrame {
         initComponents();
         this.servidor = servidor;
         this.logado = logado;
-        this.setName(logado.getNome());
+        this.setName(this.getName() + "-" + logado.getNome());
         this.file = new Arquivo(jTextArea);
         jTextArea.getDocument().addUndoableEditListener(manager);        
         
-        WriteFile wf = new WriteFile(file, jTextArea);
-        twf = new Thread(wf);
-        twf.start();
-        
-//        ReadFile rf = new ReadFile(file, jTextArea);
-//        trf = new Thread(rf);
-//        trf.start();
-        
-        jLabelNome.setText("Usuário: " + logado.getNome());
+        jLabelNome.setText("User: " + logado.getNome());
         if(LL != null)
-            jLabelLastLogin.setText("Último login havia sido: " + LL);
+            jLabelLastLogin.setText("Last login had been: " + LL);
         else
-            jLabelLastLogin.setText("Último login: " + logado.getLastLogin());
+            jLabelLastLogin.setText("Last login: " + logado.getLastLogin());
+        
         jTextArea.setVisible(false);
         jLabelFileName.setVisible(false);
         jButtonClose.setVisible(false);
@@ -308,25 +300,27 @@ public class TelaTexto extends javax.swing.JFrame {
         // TODO add your handling code here:
         manager.discardAllEdits(); //descarta todos as edições da textArea
         TextBox TB;
-        TB = new TextBox(manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Criar arquivo");
+        TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Criar arquivo");
         TB.setVisible(true);
     }//GEN-LAST:event_jMenuItemNovoActionPerformed
 
     private void jMenuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAbrirActionPerformed
         // TODO add your handling code here:
         manager.discardAllEdits(); //descarta todos as edições da textArea
-        TextBox TB = new TextBox(manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Abrir arquivo");
+        TextBox TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Abrir arquivo");
         TB.setVisible(true);
     }//GEN-LAST:event_jMenuItemAbrirActionPerformed
 
     private void jMenuItemUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUsersActionPerformed
         // TODO add your handling code here:
-        TelaUsers LU = new TelaUsers(logado,jLabelNome);
+        TelaUsers LU = new TelaUsers(servidor, logado, jLabelNome);
         LU.setVisible(true);
     }//GEN-LAST:event_jMenuItemUsersActionPerformed
 
     private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
         // TODO add your handling code here:
+        servidor.stopThread(file.getThread()); // para a thread de escrever o arquivo
+        
         jTextArea.setText(""); //limpa o texto da textArea
         manager.discardAllEdits(); //descarta todos as edições da textArea
         file.setNome(null);
@@ -369,7 +363,7 @@ public class TelaTexto extends javax.swing.JFrame {
 
     private void jMenuItemFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindActionPerformed
         // TODO add your handling code here:
-        TextBox TB = new TextBox(manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Encontre uma palavra");
+        TextBox TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Encontre uma palavra");
         TB.setVisible(true);
     }//GEN-LAST:event_jMenuItemFindActionPerformed
 
@@ -387,7 +381,11 @@ public class TelaTexto extends javax.swing.JFrame {
 
     private void jButtonDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisconnectActionPerformed
         // TODO add your handling code here:
+        if(!file.isNull()) // se tem arquivo, parar a thread de write
+            servidor.stopThread(file.getThread());
+        
         servidor.disconnectClient(logado);
+        //servidor.disconnectAll();
     }//GEN-LAST:event_jButtonDisconnectActionPerformed
 
     private void jButtonDisconnectKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonDisconnectKeyPressed
@@ -402,6 +400,7 @@ public class TelaTexto extends javax.swing.JFrame {
         // TODO add your handling code here:
         jButtonDisconnect.doClick();
     }//GEN-LAST:event_formWindowClosing
+
     
     /**
      * @param args the command line arguments

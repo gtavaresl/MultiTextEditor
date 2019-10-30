@@ -5,8 +5,6 @@
  */
 package multitexteditor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -26,6 +24,7 @@ public class TextBox extends javax.swing.JFrame {
      */
     
     private final String mode;
+    Server servidor;
     Arquivo file;
     JTextArea TA;
     JButton CB;
@@ -39,14 +38,29 @@ public class TextBox extends javax.swing.JFrame {
     UndoManager manager;
     
     
-    /** Método construtor do frame TextBox */
-    public TextBox(UndoManager manager, JTextArea TA, JButton CB, JButton S, JLabel FN, JMenuItem N, JMenuItem O,JMenuItem U, JMenuItem R, JMenuItem F, Arquivo file, String mode) {
+    /** Método construtor do frame TextBox
+     * @param logado
+     * @param manager
+     * @param TA
+     * @param CB
+     * @param S
+     * @param FN
+     * @param N
+     * @param O
+     * @param U
+     * @param R
+     * @param F
+     * @param file
+     * @param mode */
+    public TextBox(Server servidor, User logado, UndoManager manager, JTextArea TA, JButton CB, JButton S, JLabel FN, JMenuItem N, JMenuItem O,JMenuItem U, JMenuItem R, JMenuItem F, Arquivo file, String mode) {
         super(mode);
         this.mode = mode;
         initComponents();
-        this.manager = manager;
-        this.TA = TA;
         this.setLocationRelativeTo(null);
+        this.manager = manager;
+        this.setName(this.getName() + "-" + logado.getNome());
+        this.servidor = servidor;
+        this.TA = TA;
         this.CB = CB;
         this.FN = FN;
         this.S = S;
@@ -85,6 +99,10 @@ public class TextBox extends javax.swing.JFrame {
             }else if(mode.equals("Abrir arquivo"))
                 file.readFile();
             manager.discardAllEdits();
+            
+            file.createThread();
+            servidor.startThread(file.getThread());
+            
             TA.setVisible(true);
             TA.requestFocus();
             CB.setVisible(true);

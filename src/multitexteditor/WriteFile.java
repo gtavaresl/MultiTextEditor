@@ -25,7 +25,7 @@ public class WriteFile implements Runnable {
     
     @Override
     public void run() {
-        Timer timer = new Timer(1, (ActionEvent evt1) -> {
+        Timer timer = new Timer(10, (ActionEvent evt1) -> {
             if(!this.file.isNull()){
                 this.file.setTexto(this.textArea.getText());
                 this.file.writeFile();

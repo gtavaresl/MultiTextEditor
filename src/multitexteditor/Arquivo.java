@@ -20,19 +20,18 @@ import javax.swing.JTextArea;
  *
  * @author Gabriell
  */
-public class Arquivo { //extends TimerTask{
+public class Arquivo {
     private String nome;
     private String texto;
-//    private final Timer timer;
     private File arq;
     public JTextArea textArea;
     private final Lock semaforo;
     private final Condition cond;
+    public Thread twf;
 
     
     public Arquivo(JTextArea textArea){
         this.texto = "";
-//        this.timer = new Timer();
         this.textArea = textArea;
         semaforo = new ReentrantLock();
         cond = semaforo.newCondition();
@@ -41,7 +40,6 @@ public class Arquivo { //extends TimerTask{
     public String getNome() {
         return this.nome;
     }
-    
     
     public String getTexto() {
         return texto;
@@ -55,10 +53,6 @@ public class Arquivo { //extends TimerTask{
         this.texto = texto;
     }
     
-//    public void setTimer(){
-//        timer.scheduleAtFixedRate(this,0,1000);
-//    }
-    
     public void setFile(){
         this.arq = new File(this.nome + ".txt");
     }
@@ -69,6 +63,10 @@ public class Arquivo { //extends TimerTask{
     
     public boolean isNull(){
         return this.arq == null;
+    }
+    
+    public Thread getThread(){
+        return this.twf;
     }
     
     public void writeFile(){
@@ -111,23 +109,10 @@ public class Arquivo { //extends TimerTask{
             semaforo.unlock();
         }
     }
+    
+    public void createThread(){
+        WriteFile wf = new WriteFile(this, textArea);
+        this.twf = new Thread(wf);
+    }
 
-//    @Override
-//    public void run() {
-//        if(this.arq != null){
-//            this.texto = textArea.getText();
-//            this.writeFile();
-//            javax.swing.Timer rf = new javax.swing.Timer(500, (ActionEvent evt1) -> {
-//                if(this.editable){
-//                    int cursor = this.textArea.getCaretPosition();
-//                    this.readFile();
-//                    if(cursor >= this.textArea.getDocument().getLength())
-//                        cursor = this.textArea.getDocument().getLength()-1;
-//                    this.textArea.setCaretPosition(cursor);
-//                }
-//            });
-//            rf.setRepeats(false);
-//            rf.start();
-//        }
-//    }
 }
