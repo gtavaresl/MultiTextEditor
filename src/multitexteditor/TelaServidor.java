@@ -5,6 +5,10 @@
  */
 package multitexteditor;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 
 /**
@@ -19,16 +23,24 @@ public class TelaServidor extends javax.swing.JFrame {
     
     Server servidor;
     DefaultListModel<String> model;
+    private final InputStream imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
+    private final BufferedImage myImg;
     
-    public TelaServidor() {
+    /** Método construtor da classe TelaServidor
+     * @throws java.io.IOException */
+    public TelaServidor() throws IOException {
+        super("Servidor");
         initComponents();
         this.model = new DefaultListModel<>();
-        jListClients.setModel(this.model);
-        jListClients.setVisible(false);
-        jLabelListClients.setVisible(false);
+        this.myImg = ImageIO.read(imgStream);
+        this.setIconImage(this.myImg);
         servidor = new Server(jListClients);
+        jListClients.setModel(this.model);
+        jScrollPane1.setVisible(false);
+        jLabelListClients.setVisible(false);
         jLabelStatus.setText(servidor.getStatusText());
         jButtonLogin.setEnabled(false);
+        jButtonDisconnect.setVisible(false);
     }
 
     /**
@@ -44,6 +56,9 @@ public class TelaServidor extends javax.swing.JFrame {
         jToggleButtonStatus = new javax.swing.JToggleButton();
         jLabelStatus = new javax.swing.JLabel();
         jButtonLogin = new javax.swing.JButton();
+        jButtonListUsers = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jButtonDisconnect = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jListClients = new javax.swing.JList<>();
         jLabelListClients = new javax.swing.JLabel();
@@ -77,14 +92,12 @@ public class TelaServidor extends javax.swing.JFrame {
             }
         });
 
-        jListClients.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        jButtonListUsers.setText("List Users");
+        jButtonListUsers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonListUsersActionPerformed(evt);
+            }
         });
-        jScrollPane1.setViewportView(jListClients);
-
-        jLabelListClients.setText("Clients");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -94,63 +107,115 @@ public class TelaServidor extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonLogin)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jToggleButtonStatus)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabelStatus)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
-                        .addComponent(jLabelListClients)
-                        .addGap(55, 55, 55))))
+                        .addComponent(jLabelStatus))
+                    .addComponent(jButtonLogin)
+                    .addComponent(jButtonListUsers))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jToggleButtonStatus)
-                        .addComponent(jLabelStatus))
-                    .addComponent(jLabelListClients, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jToggleButtonStatus)
+                    .addComponent(jLabelStatus))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonLogin)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addComponent(jButtonLogin)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonListUsers)
+                .addContainerGap(115, Short.MAX_VALUE))
         );
+
+        jButtonDisconnect.setText("Disconnect All");
+        jButtonDisconnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDisconnectActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jButtonDisconnect)
+                .addGap(0, 6, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jButtonDisconnect)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jListClients.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(jListClients);
+
+        jLabelListClients.setText("Clients:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(jLabelListClients)
+                            .addGap(41, 41, 41)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jLabelListClients)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /** Método que altera o status do toggleButton e atualiza o frame */
     private void jToggleButtonStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonStatusActionPerformed
         // TODO add your handling code here:
-        servidor.changeStatus();
+        servidor.changeStatus(); //altera status do botão
         jLabelStatus.setText(servidor.getStatusText());
         jButtonLogin.setEnabled(servidor.getStatus());
-        jListClients.setVisible(servidor.getStatus());
+        jScrollPane1.setVisible(servidor.getStatus());
         jLabelListClients.setVisible(servidor.getStatus());
+        jButtonDisconnect.setVisible(servidor.getStatus());
+        if(!servidor.getStatus())
+            servidor.disconnectAll();
     }//GEN-LAST:event_jToggleButtonStatusActionPerformed
 
+    /** Método que cria o frame TelaLogin ao clicar no botão AddClient */
     private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
         // TODO add your handling code here:
-        TelaLogin TL = new TelaLogin(servidor);
-        TL.setVisible(true);
+        TelaLogin TL;
+        try {
+            TL = new TelaLogin(servidor);
+            TL.setVisible(true);
+        } catch (IOException ex) {
+        }
     }//GEN-LAST:event_jButtonLoginActionPerformed
 
+    /** Método que é chamado quando o ENTER é pressionado enquanto o toggleButton está selecionado */
     private void jToggleButtonStatusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jToggleButtonStatusKeyPressed
         // TODO add your handling code here:
         char key = evt.getKeyChar();
@@ -159,6 +224,7 @@ public class TelaServidor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jToggleButtonStatusKeyPressed
 
+    /** Método que chama a função Login ao apertar ENTER enquanto o jButton está selecionado */
     private void jButtonLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonLoginKeyPressed
         // TODO add your handling code here:
         char key = evt.getKeyChar();
@@ -166,6 +232,23 @@ public class TelaServidor extends javax.swing.JFrame {
             jButtonLogin.doClick();
         }
     }//GEN-LAST:event_jButtonLoginKeyPressed
+
+    /** Método que chama o frame TelaUsers ao apertar o botão jButtonListUsers */
+    private void jButtonListUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListUsersActionPerformed
+        // TODO add your handling code here:
+        TelaUsers TU;
+        try {
+            TU = new TelaUsers(servidor, null, null);
+            TU.setVisible(true);
+        } catch (IOException ex) {
+        }
+    }//GEN-LAST:event_jButtonListUsersActionPerformed
+
+    /** Método que desconecta todos os clientes logados ao apertar o botão jButtonDisconnect */
+    private void jButtonDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisconnectActionPerformed
+        // TODO add your handling code here:
+        servidor.disconnectAll();
+    }//GEN-LAST:event_jButtonDisconnectActionPerformed
 
     /**
      * @param args the command line arguments
@@ -192,16 +275,22 @@ public class TelaServidor extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new TelaServidor().setVisible(true);
+            try {
+                new TelaServidor().setVisible(true);
+            } catch (IOException ex) {
+            }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonDisconnect;
+    private javax.swing.JButton jButtonListUsers;
     private javax.swing.JButton jButtonLogin;
     private javax.swing.JLabel jLabelListClients;
     private javax.swing.JLabel jLabelStatus;
     private javax.swing.JList<String> jListClients;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToggleButton jToggleButtonStatus;
     // End of variables declaration//GEN-END:variables
