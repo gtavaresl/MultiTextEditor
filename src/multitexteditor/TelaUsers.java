@@ -27,11 +27,11 @@ public final class TelaUsers extends javax.swing.JFrame {
      * @param users
      */
     
-    private final Server servidor;
-    private final User logado;
-    private final JLabel jLN;
-    private DefaultTableModel model;
-    private final InputStream imgStream;
+    Server servidor;
+    User logado;
+    JLabel jLN;
+    DefaultTableModel model;
+    private final InputStream imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
     private final BufferedImage myImg;
             
     /** Método construtor da classe TelaUsers
@@ -41,7 +41,6 @@ public final class TelaUsers extends javax.swing.JFrame {
      * @throws java.io.IOException */
     public TelaUsers(Server servidor, User logado, JLabel jLN) throws IOException {
         super("Editar/Visualizar usuários"); //altera titulo do frame 
-        this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         initComponents();
         this.myImg = ImageIO.read(imgStream);
         this.setIconImage(this.myImg);

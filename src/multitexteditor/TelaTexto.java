@@ -24,13 +24,13 @@ public class TelaTexto extends javax.swing.JFrame {
      * @param logado
      */
     
-    private final Server servidor;
-    private final User logado;
-    private final Arquivo file;
-    private final UndoManager manager = new UndoManager();
-    private Thread twf;
+    Server servidor;
+    User logado;
+    Arquivo file;
+    UndoManager manager = new UndoManager();
+    Thread twf;
     //Thread trf;
-    private final InputStream imgStream;
+    private final InputStream imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
     private final BufferedImage myImg;
     
     /** Método construtor da classe TelaTexto
@@ -40,7 +40,6 @@ public class TelaTexto extends javax.swing.JFrame {
      * @throws java.io.IOException */
     public TelaTexto(Server servidor, User logado, String LL) throws IOException {
         super("Editor de texto colaborativo"); //altera o titulo do frame
-        this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         initComponents();
         this.myImg = ImageIO.read(imgStream);
         this.setIconImage(this.myImg);
@@ -76,6 +75,7 @@ public class TelaTexto extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem1 = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea = new javax.swing.JTextArea();
@@ -95,8 +95,13 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuItemUndo = new javax.swing.JMenuItem();
         jMenuItemRedo = new javax.swing.JMenuItem();
         jMenuItemFind = new javax.swing.JMenuItem();
+        jMenuItemCopy = new javax.swing.JMenuItem();
+        jMenuItemPaste = new javax.swing.JMenuItem();
+        jMenuItemCut = new javax.swing.JMenuItem();
         jMenuUsers = new javax.swing.JMenu();
         jMenuItemUsers = new javax.swing.JMenuItem();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setName("frameTexto"); // NOI18N
@@ -271,6 +276,33 @@ public class TelaTexto extends javax.swing.JFrame {
         });
         jMenuEdit.add(jMenuItemFind);
 
+        jMenuItemCopy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemCopy.setText("Copiar");
+        jMenuItemCopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCopyActionPerformed(evt);
+            }
+        });
+        jMenuEdit.add(jMenuItemCopy);
+
+        jMenuItemPaste.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemPaste.setText("Colar");
+        jMenuItemPaste.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemPasteActionPerformed(evt);
+            }
+        });
+        jMenuEdit.add(jMenuItemPaste);
+
+        jMenuItemCut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemCut.setText("Cortar");
+        jMenuItemCut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCutActionPerformed(evt);
+            }
+        });
+        jMenuEdit.add(jMenuItemCut);
+
         jMenuBar1.add(jMenuEdit);
 
         jMenuUsers.setText("Users");
@@ -441,6 +473,21 @@ public class TelaTexto extends javax.swing.JFrame {
         jButtonDisconnect.doClick();
     }//GEN-LAST:event_formWindowClosing
 
+    private void jMenuItemPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPasteActionPerformed
+        // TODO add your handling code here:
+        jTextArea.paste();
+    }//GEN-LAST:event_jMenuItemPasteActionPerformed
+
+    private void jMenuItemCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCutActionPerformed
+        // TODO add your handling code here:
+        jTextArea.cut();
+    }//GEN-LAST:event_jMenuItemCutActionPerformed
+
+    private void jMenuItemCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopyActionPerformed
+        // TODO add your handling code here:
+        jTextArea.copy();
+    }//GEN-LAST:event_jMenuItemCopyActionPerformed
+
     
     /**
      * @param args the command line arguments
@@ -488,9 +535,13 @@ public class TelaTexto extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuEdit;
     private javax.swing.JMenu jMenuFile;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItemAbrir;
+    private javax.swing.JMenuItem jMenuItemCopy;
+    private javax.swing.JMenuItem jMenuItemCut;
     private javax.swing.JMenuItem jMenuItemFind;
     private javax.swing.JMenuItem jMenuItemNovo;
+    private javax.swing.JMenuItem jMenuItemPaste;
     private javax.swing.JMenuItem jMenuItemRedo;
     private javax.swing.JMenuItem jMenuItemUndo;
     private javax.swing.JMenuItem jMenuItemUsers;

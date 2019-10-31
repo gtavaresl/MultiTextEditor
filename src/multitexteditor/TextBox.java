@@ -28,19 +28,19 @@ public class TextBox extends javax.swing.JFrame {
      */
     
     private final String mode;
-    private final Server servidor;
-    private final Arquivo file;
-    private final JTextArea TA;
-    private final JButton CB;
-    private final JButton S;
-    private final JLabel FN;
-    private final JMenuItem N;
-    private final JMenuItem O;
-    private final JMenuItem U;
-    private final JMenuItem R;
-    private final JMenuItem F;
-    private final UndoManager manager;
-    private final InputStream imgStream;
+    Server servidor;
+    Arquivo file;
+    JTextArea TA;
+    JButton CB;
+    JButton S;
+    JLabel FN;
+    JMenuItem N;
+    JMenuItem O;
+    JMenuItem U;
+    JMenuItem R;
+    JMenuItem F;
+    UndoManager manager;
+    private final InputStream imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
     private final BufferedImage myImg;
     
     
@@ -62,7 +62,6 @@ public class TextBox extends javax.swing.JFrame {
      * @throws java.io.IOException */
     public TextBox(Server servidor, User logado, UndoManager manager, JTextArea TA, JButton CB, JButton S, JLabel FN, JMenuItem N, JMenuItem O,JMenuItem U, JMenuItem R, JMenuItem F, Arquivo file, String mode) throws IOException {
         super(mode);
-        this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         this.mode = mode;
         initComponents();
         this.myImg = ImageIO.read(imgStream);
@@ -135,7 +134,7 @@ public class TextBox extends javax.swing.JFrame {
     private void find() throws BadLocationException{
         int chk;
         String appendedText = "", aux;
-        if(jTextField.getText().length() > 0){
+        if(!jTextField.getText().isEmpty()){
             if(jRadioButtonUp.isSelected()){
                 appendedText = TA.getText(0, TA.getCaretPosition()); //associa o texto anterior ao cursor com a string
             }
