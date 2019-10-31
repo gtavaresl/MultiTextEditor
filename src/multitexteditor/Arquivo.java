@@ -23,7 +23,7 @@ import javax.swing.JTextArea;
 public class Arquivo {
     private String nome;
     private String texto;
-    private File arq;
+    protected File arq;
     
     /** TextArea onde serão inseridos os textos */
     public JTextArea textArea; 
@@ -130,6 +130,18 @@ public class Arquivo {
         } finally {
             semaforo.unlock(); //desbloqueia
         }
+    }
+    
+    public void renameOpenFile(String newName){
+        File file = new File(newName+".txt");
+        if(this.arq != null){
+            this.arq.renameTo(file);
+        }
+    }
+    
+    public void deleteOpenFile(){
+        if(this.arq != null)
+            this.arq.delete();
     }
     
     /** Método que cria uma nova thread */

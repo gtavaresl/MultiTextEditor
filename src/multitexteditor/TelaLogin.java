@@ -27,7 +27,7 @@ public class TelaLogin extends javax.swing.JFrame {
     private User logado;
     private String LL;
     private final SimpleDateFormat fmt;
-    private final InputStream imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
+    private final InputStream imgStream;
     private final BufferedImage myImg;
     
     /** Método construtor da classe TelaLogin
@@ -35,6 +35,7 @@ public class TelaLogin extends javax.swing.JFrame {
      * @throws java.io.IOException */
     public TelaLogin(Server servidor) throws IOException {
         super("Login");
+        this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         initComponents();
         this.myImg = ImageIO.read(imgStream);
         this.setIconImage(this.myImg);

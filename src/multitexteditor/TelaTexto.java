@@ -24,13 +24,13 @@ public class TelaTexto extends javax.swing.JFrame {
      * @param logado
      */
     
-    Server servidor;
-    User logado;
-    Arquivo file;
-    UndoManager manager = new UndoManager();
-    Thread twf;
+    private final Server servidor;
+    private final User logado;
+    private final Arquivo file;
+    private final UndoManager manager = new UndoManager();
+    private Thread twf;
     //Thread trf;
-    private final InputStream imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
+    private final InputStream imgStream;
     private final BufferedImage myImg;
     
     /** Método construtor da classe TelaTexto
@@ -40,6 +40,7 @@ public class TelaTexto extends javax.swing.JFrame {
      * @throws java.io.IOException */
     public TelaTexto(Server servidor, User logado, String LL) throws IOException {
         super("Editor de texto colaborativo"); //altera o titulo do frame
+        this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         initComponents();
         this.myImg = ImageIO.read(imgStream);
         this.setIconImage(this.myImg);
@@ -60,6 +61,8 @@ public class TelaTexto extends javax.swing.JFrame {
         jButtonClose.setVisible(false);
         jButtonSave.setVisible(false);
         jButtonSave.setMnemonic(KeyEvent.VK_S);
+        jMenuItemDelete.setVisible(false);
+        jMenuItemRename.setVisible(false);
         jLabelFileSaved.setVisible(false);
         jMenuItemRedo.setEnabled(false);
         jMenuItemUndo.setEnabled(false);
@@ -75,7 +78,6 @@ public class TelaTexto extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenuItem1 = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea = new javax.swing.JTextArea();
@@ -91,17 +93,14 @@ public class TelaTexto extends javax.swing.JFrame {
         jMenuFile = new javax.swing.JMenu();
         jMenuItemNovo = new javax.swing.JMenuItem();
         jMenuItemAbrir = new javax.swing.JMenuItem();
+        jMenuItemDelete = new javax.swing.JMenuItem();
+        jMenuItemRename = new javax.swing.JMenuItem();
         jMenuEdit = new javax.swing.JMenu();
         jMenuItemUndo = new javax.swing.JMenuItem();
         jMenuItemRedo = new javax.swing.JMenuItem();
         jMenuItemFind = new javax.swing.JMenuItem();
-        jMenuItemCopy = new javax.swing.JMenuItem();
-        jMenuItemPaste = new javax.swing.JMenuItem();
-        jMenuItemCut = new javax.swing.JMenuItem();
         jMenuUsers = new javax.swing.JMenu();
         jMenuItemUsers = new javax.swing.JMenuItem();
-
-        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setName("frameTexto"); // NOI18N
@@ -242,6 +241,25 @@ public class TelaTexto extends javax.swing.JFrame {
         });
         jMenuFile.add(jMenuItemAbrir);
 
+        jMenuItemDelete.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, java.awt.event.InputEvent.SHIFT_MASK));
+        jMenuItemDelete.setText("Deletar");
+        jMenuItemDelete.setName(""); // NOI18N
+        jMenuItemDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemDeleteActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItemDelete);
+
+        jMenuItemRename.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.SHIFT_MASK));
+        jMenuItemRename.setText("Renomear");
+        jMenuItemRename.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemRenameActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItemRename);
+
         jMenuBar1.add(jMenuFile);
 
         jMenuEdit.setText("Edit");
@@ -275,33 +293,6 @@ public class TelaTexto extends javax.swing.JFrame {
             }
         });
         jMenuEdit.add(jMenuItemFind);
-
-        jMenuItemCopy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemCopy.setText("Copiar");
-        jMenuItemCopy.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemCopyActionPerformed(evt);
-            }
-        });
-        jMenuEdit.add(jMenuItemCopy);
-
-        jMenuItemPaste.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemPaste.setText("Colar");
-        jMenuItemPaste.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemPasteActionPerformed(evt);
-            }
-        });
-        jMenuEdit.add(jMenuItemPaste);
-
-        jMenuItemCut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemCut.setText("Cortar");
-        jMenuItemCut.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemCutActionPerformed(evt);
-            }
-        });
-        jMenuEdit.add(jMenuItemCut);
 
         jMenuBar1.add(jMenuEdit);
 
@@ -349,7 +340,7 @@ public class TelaTexto extends javax.swing.JFrame {
         manager.discardAllEdits(); //descarta todos as edições da textArea
         TextBox TB;
         try {
-            TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Criar arquivo");
+            TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.jMenuItemDelete, this.jMenuItemRename, this.file, "Criar arquivo");
             TB.setVisible(true);
         } catch (IOException ex) {
         }
@@ -361,7 +352,7 @@ public class TelaTexto extends javax.swing.JFrame {
         manager.discardAllEdits(); //descarta todos as edições da textArea
         TextBox TB;
         try {
-            TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Abrir arquivo");
+            TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.jMenuItemDelete, this.jMenuItemRename, this.file, "Abrir arquivo");
             TB.setVisible(true);
         } catch (IOException ex) {
         }
@@ -395,6 +386,8 @@ public class TelaTexto extends javax.swing.JFrame {
         jLabelFileName.setVisible(false);
         jMenuItemAbrir.setEnabled(true);
         jMenuItemNovo.setEnabled(true);
+        jMenuItemDelete.setVisible(false);
+        jMenuItemRename.setVisible(false);
         jMenuItemUndo.setEnabled(false);
         jMenuItemRedo.setEnabled(false);
     }//GEN-LAST:event_jButtonCloseActionPerformed
@@ -431,7 +424,7 @@ public class TelaTexto extends javax.swing.JFrame {
         // TODO add your handling code here:
         TextBox TB;
         try {
-            TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.file, "Encontre uma palavra");
+            TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.jMenuItemDelete, this.jMenuItemRename, this.file, "Encontre uma palavra");
             TB.setVisible(true);
         } catch (IOException ex) {
         }
@@ -473,20 +466,21 @@ public class TelaTexto extends javax.swing.JFrame {
         jButtonDisconnect.doClick();
     }//GEN-LAST:event_formWindowClosing
 
-    private void jMenuItemPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPasteActionPerformed
+    private void jMenuItemDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemDeleteActionPerformed
         // TODO add your handling code here:
-        jTextArea.paste();
-    }//GEN-LAST:event_jMenuItemPasteActionPerformed
+        file.deleteOpenFile();
+        jButtonClose.doClick();
+    }//GEN-LAST:event_jMenuItemDeleteActionPerformed
 
-    private void jMenuItemCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCutActionPerformed
+    private void jMenuItemRenameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRenameActionPerformed
         // TODO add your handling code here:
-        jTextArea.cut();
-    }//GEN-LAST:event_jMenuItemCutActionPerformed
-
-    private void jMenuItemCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopyActionPerformed
-        // TODO add your handling code here:
-        jTextArea.copy();
-    }//GEN-LAST:event_jMenuItemCopyActionPerformed
+        TextBox TB;
+        try {
+            TB = new TextBox(servidor, logado, manager, this.jTextArea, this.jButtonClose, this.jButtonSave, this.jLabelFileName, this.jMenuItemNovo, this.jMenuItemAbrir, this.jMenuItemUndo, this.jMenuItemRedo, this.jMenuItemFind, this.jMenuItemDelete, this.jMenuItemRename, this.file, "Digite o novo nome do arquivo");
+            TB.setVisible(true);
+        } catch (IOException ex) {
+        }
+    }//GEN-LAST:event_jMenuItemRenameActionPerformed
 
     
     /**
@@ -535,14 +529,12 @@ public class TelaTexto extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuEdit;
     private javax.swing.JMenu jMenuFile;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItemAbrir;
-    private javax.swing.JMenuItem jMenuItemCopy;
-    private javax.swing.JMenuItem jMenuItemCut;
+    private javax.swing.JMenuItem jMenuItemDelete;
     private javax.swing.JMenuItem jMenuItemFind;
     private javax.swing.JMenuItem jMenuItemNovo;
-    private javax.swing.JMenuItem jMenuItemPaste;
     private javax.swing.JMenuItem jMenuItemRedo;
+    private javax.swing.JMenuItem jMenuItemRename;
     private javax.swing.JMenuItem jMenuItemUndo;
     private javax.swing.JMenuItem jMenuItemUsers;
     private javax.swing.JMenu jMenuUsers;

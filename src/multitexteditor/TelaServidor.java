@@ -21,15 +21,16 @@ public class TelaServidor extends javax.swing.JFrame {
      * Creates new form TelaServidor
      */
     
-    Server servidor;
-    DefaultListModel<String> model;
-    private final InputStream imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
+    private final Server servidor;
+    private final DefaultListModel<String> model;
+    private final InputStream imgStream;
     private final BufferedImage myImg;
     
     /** Método construtor da classe TelaServidor
      * @throws java.io.IOException */
     public TelaServidor() throws IOException {
         super("Servidor");
+        this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         initComponents();
         this.model = new DefaultListModel<>();
         this.myImg = ImageIO.read(imgStream);
