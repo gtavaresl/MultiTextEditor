@@ -17,7 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JTextArea;
 
 /**
- *
+ * Implementa o arquivo e seus metodos.
  * @author Gabriell
  */
 public class Arquivo {
