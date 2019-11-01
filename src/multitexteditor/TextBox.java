@@ -8,6 +8,8 @@ package multitexteditor;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,7 +20,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.undo.UndoManager;
 
 /**
- *
+ * Implementa uma tela para input de textos.
  * @author Gabriell
  */
 public class TextBox extends javax.swing.JFrame {
@@ -44,6 +46,9 @@ public class TextBox extends javax.swing.JFrame {
     private final UndoManager manager;
     private final InputStream imgStream;
     private final BufferedImage myImg;
+    private final JMenuItem ICopy;
+    private final JMenuItem ICut;
+    private final JMenuItem IPaste;
     
     
     /** Método construtor do frame TextBox
@@ -64,7 +69,7 @@ public class TextBox extends javax.swing.JFrame {
      * @param file
      * @param mode
      * @throws java.io.IOException */
-    public TextBox(Server servidor, User logado, UndoManager manager, JTextArea TA, JButton CB, JButton S, JLabel FN, JMenuItem N, JMenuItem O,JMenuItem U, JMenuItem R, JMenuItem F, JMenuItem D, JMenuItem RE, Arquivo file, String mode) throws IOException {
+    public TextBox(Server servidor, User logado, UndoManager manager, JTextArea TA, JButton CB, JButton S, JLabel FN, JMenuItem N, JMenuItem O,JMenuItem U, JMenuItem R, JMenuItem F, JMenuItem D, JMenuItem RE, JMenuItem ICopy, JMenuItem IPaste, JMenuItem ICut, Arquivo file, String mode) throws IOException {
         super(mode);
         this.imgStream = TelaServidor.class.getResourceAsStream("file_txt-512.png");
         this.mode = mode;
@@ -85,13 +90,15 @@ public class TextBox extends javax.swing.JFrame {
         this.R = R;
         this.F = F;
         this.D = D;
+        this.ICopy = ICopy;
+        this.IPaste = IPaste;
+        this.ICut = ICut;
         this.RE = RE;
         this.file = file;
-        if(!mode.equals("Encontre uma palavra")){ //significa que o frame foi chamado pela função novo ou abrir arquivo
+        if(!mode.equals("Encontre uma palavra")) { //significa que o frame foi chamado pela função novo ou abrir arquivo
             jRadioButtonUp.setVisible(false);
             jRadioButtonDown.setVisible(false);
-        }
-        else{
+        } else {
             //adiciona os RadioButtons ao grupo de botões
             bGroupUpDown.add(jRadioButtonUp);
             bGroupUpDown.add(jRadioButtonDown);
@@ -106,18 +113,24 @@ public class TextBox extends javax.swing.JFrame {
      */
         
     /** Método que seleciona as operações a serem feitas e atualiza as condições do frame*/
-    private void setFileName(){
+    private void setFileName() throws InterruptedException{
         if(!jTextField.getText().isEmpty()){
+            if(file.getThread() != null){
+                servidor.stopThread(file.getThread());
+                Thread.sleep(1000);
+                file.deleteOpenFile();
+            }
             file.setNome(null);
-            TA.setText("");
             file.setNome(jTextField.getText());
             file.setFile();
-            if(mode.equals("Criar arquivo")){
-                file.setTexto("");
-            }else if(mode.equals("Abrir arquivo"))
-                file.readFile();
-            manager.discardAllEdits();
-            
+            if(!mode.equals("Renomear o arquivo.")){
+                TA.setText("");
+                manager.discardAllEdits();
+                if(mode.equals("Criar arquivo"))
+                    file.setTexto("");
+                else if(mode.equals("Abrir arquivo"))
+                    file.readFile();
+            }
             file.createThread();
             servidor.startThread(file.getThread());
             
@@ -132,6 +145,9 @@ public class TextBox extends javax.swing.JFrame {
             R.setEnabled(true);
             U.setEnabled(true);
             F.setEnabled(true);
+            ICopy.setEnabled(true);
+            IPaste.setEnabled(true);
+            ICut.setEnabled(true);
             this.dispose();
         }else
             JOptionPane.showMessageDialog(null, "Insira um nome"); //mensagem de erro
@@ -302,7 +318,11 @@ public class TextBox extends javax.swing.JFrame {
     private void jButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActionPerformed
         // TODO add your handling code here:
         if(!mode.equals("Encontre uma palavra") && !mode.equals("Digite o novo nome do arquivo")){
-            setFileName();
+            try {
+                setFileName();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TextBox.class.getName()).log(Level.SEVERE, null, ex);
+            }
             this.D.setVisible(true);
             this.RE.setVisible(true);
         }
@@ -326,7 +346,11 @@ public class TextBox extends javax.swing.JFrame {
         char key = evt.getKeyChar();
         if(key == '\n'){
             if(!mode.equals("Encontre uma palavra") && !mode.equals("Digite o novo nome do arquivo")){
-                setFileName();
+                try {
+                    setFileName();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(TextBox.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 this.D.setVisible(true);
                 this.RE.setVisible(true);
             }
@@ -351,7 +375,11 @@ public class TextBox extends javax.swing.JFrame {
         char key = evt.getKeyChar();
         if(key == '\n'){
             if(!mode.equals("Encontre uma palavra") && !mode.equals("Digite o novo nome do arquivo")){
-                setFileName();
+                try {
+                    setFileName();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(TextBox.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 this.D.setVisible(true);
                 this.RE.setVisible(true);
             }

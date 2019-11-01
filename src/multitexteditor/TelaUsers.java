@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
+ * Implementa uma tela para listar os clientes.
  * @author Gabriell
  */
 public final class TelaUsers extends javax.swing.JFrame {

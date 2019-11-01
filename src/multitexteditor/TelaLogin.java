@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * Implementa uma tela de login para o cliente.
  * @author Gabriell
  */
 public class TelaLogin extends javax.swing.JFrame {

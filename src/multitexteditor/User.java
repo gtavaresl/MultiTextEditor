@@ -12,7 +12,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- *
+ * Implementa o cliente e seus metodos.
  * @author Gabriell
  */
 public class User {

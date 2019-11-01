@@ -10,7 +10,7 @@ import javax.swing.JTextArea;
 import javax.swing.Timer;
 
 /**
- *
+ * Classe que executa a escrita do arquivo em paralelo.
  * @author Gabriell
  */
 public class WriteFile implements Runnable {
@@ -21,6 +21,9 @@ public class WriteFile implements Runnable {
     /** Atributo que representa o JTextArea */
     public JTextArea textArea;
     
+    /** Atributo que representa o temporizador da thread */ 
+    private Timer timer;
+    
     /** Método construtor da classe WriteFile
      * @param file
      * @param textArea */
@@ -29,18 +32,18 @@ public class WriteFile implements Runnable {
         this.textArea = textArea;
     }
     
-    
     /** Método que paraleliza a escrita do arquivo */
     @Override
     public void run() {
-        Timer timer = new Timer(10, (ActionEvent evt1) -> {
-            System.out.println(this.file.getNome());
+        this.timer = new Timer(100, (ActionEvent evt1) -> {
             if(!this.file.isNull()){
                 this.file.setTexto(this.textArea.getText());
                 this.file.writeFile();
+            }else{
+                this.timer.stop();
             }
         });
-        timer.setRepeats(true);
-        timer.start();
+        this.timer.setRepeats(true);
+        this.timer.start();
     }
 }

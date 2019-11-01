@@ -16,7 +16,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 /**
- *
+ * Implementa o servidor e seus metodos.
  * @author Gabriell
  */
 public class Server {

@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 
 /**
- *
+ * Implementa a tela principal do servidor.
  * @author Gabriell
  */
 public class TelaServidor extends javax.swing.JFrame {

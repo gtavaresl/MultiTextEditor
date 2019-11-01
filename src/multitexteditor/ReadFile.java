@@ -10,9 +10,9 @@ import javax.swing.JTextArea;
 import javax.swing.Timer;
 
 /**
- *
+ * Classe que executa a leitura do arquivo em paralelo.
  * @author Gabriell
- *  Classe será implementada no Projeto 3
+ *
  */
 public class ReadFile implements Runnable {
     
